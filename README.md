@@ -12,11 +12,11 @@ Diese Software kann bei Feuerwehren dazu verwendet werden, die Informationen des
 
 - **Digitale Uhr**: Im Ruhezustand zeigt das Alarmdisplay in großen Lettern eine Uhr und das Datum an. 
 - **Hinweistexte**: Das Alarmdisplay kann als digitales Schwarzes Brett genutzt werden. Es können bis zu fünf Hinweistexte hinterlegt werden, die abwechselnd den Bildschirm füllen. Jeder Hinweistext kann mit einem Start- und Ende-Datum versehen werden, was eine automatische Anzeige ermöglicht.
-- **Einsatzanzeige**: Im Alarmfall zeigt das Alarmdisplay die Einsatzdaten aus dem Alarmfax an. Zusätzlich wird der Einsatzort und die Anfahrt dorthin auf einer Karte visualisiert. Ein Versand der Daten per E-Mail an die Einsatzkräfte, der Versand einer SMS (kostenpflichtig über den Partner [RettAlarm](http://www.rettalarm.de) oder der Ausdruck einer Anfahrtsroutenbeschreibung sind ebenfalls Teil des Programms.
+- **Einsatzvisualisierung und Einsatzkräfteinfo**: Im Alarmfall zeigt das Alarmdisplay die Einsatzdaten aus dem Alarmfax an. Zusätzlich wird der Einsatzort und die Anfahrt dorthin auf einer Karte visualisiert. Ein Versand der Daten per E-Mail an die Einsatzkräfte, der Versand einer SMS (kostenpflichtig über den Partner [RettAlarm](http://www.rettalarm.de) oder der Ausdruck einer Anfahrtsroutenbeschreibung sind ebenfalls Teil des Programms.
 - **Administrationsmenü**: Fast alle Parameter der Software können über ein Administrationsmenü eingestellt werden.
 
 ## Historie
-Die Software wurde bei der [Freiwilligen Feuerwehr Piflas](http://www.feuerwehr-piflas.de) zum ersten Male eingesetzt. Viele der enthaltenen Funktionen sind deswegen speziell auf die Belange dieser Feuerwehr bzw. deren Umgebung angepasst. Vielleicht ändert sich im Laufe der Zeit der Funktionsumfang im Rahmen der Weiterbildung.
+Die Software wurde bei der [Freiwilligen Feuerwehr Piflas](http://www.feuerwehr-piflas.de) zum ersten Mal eingesetzt. Viele der enthaltenen Funktionen sind deswegen speziell auf die Belange dieser Feuerwehr bzw. deren Umgebung angepasst. Vielleicht ändert sich im Laufe der Zeit der Funktionsumfang im Rahmen der Weiterentwicklung.
 
 ## Realisation & Systemvoraussetzungen
 Die Software wurde in PHP geschrieben; die Visualisierung der Informationen erfolgt in Form einer Webseite. Bei der Webseitenanzeige muss im Browser JavaScript aktiviert sein, sonst funktionieren Uhr, Hinweistexte und Aktualisierung nicht.
@@ -34,6 +34,7 @@ Für einzelne Funktionen (z.B. Druck des Anfahrtsplanes, etc.) wird auf weitere 
 - Die Software kann aktuell keine Einsatzorte auf der Autobahn visualisieren bzw. die Anfahrt dorthin berechnen. Für unseren Einsatzbereich wurden die verschiedenen Autobahnabschnitte der A92 im Skript `ocr/readfile.php` codiert, um eine optimiertere Anzeige zu erreichen.
 - Die Software kann nur dann eine genaue Anfahrt errechnen, wenn die Adresse einwandfrei von der Leitstelle übermittelt wurde und GoogleMaps diese auflösen kann.
 - Die Routenberechnung erfolgt für PKW; temporäre Straßensperrungen, Gewichtsbeschränkungen oder Durchfahrtshöhen sind nicht berücksichtigt. Eine gewisse Ortskenntnis der Einsatzfahrzeugfahrer wird also vorausgesetzt.
+-FMS-Status können nur dann dargestellt werden, wenn ein externes System die Status an die Datenbank übermittelt. In einer standalone-Standardinstallation geht dies nicht.
 
 ## Danke
 Für das Projekt "Alarmdisplay" wurde auf weitere Software zurückgegriffen, bei deren Autoren ich mich herzlich bedanken möchte.
@@ -52,7 +53,7 @@ Verwendet wurden:
 
 
 
-# Konfigurieren und Anpassen
+## Konfigurieren und Anpassen
 - **Konfiguration:** Die Konfiguration können Sie bequem über das Administrationsmenü vornehmen. Dieses können Sie nach erfolgreicher Installation mit dem Browser aufrufen. Wenn Sie die Installation wie in der Anleitung beschrieben durchgeführt haben, erreichen Sie den Administrationsbereich unter http://IP-Adresse des Servers/alarmdisplay/administrator. Der Benutzername lautet `admin`, das Passwort `admin`. Es wird aus Sicherheitsgründen empfohlen, das Passwort zu ändern (möglich via Admin-Menü).
 
 - **Anpassen der Software**. Mit Sicherheit werden Sie die ein oder andere Anpassung an der Software vornehmen wollen. Meistens handelt es sich hierbei um Anpassungen an ihr Alarmfax (wegen Aufbau und Struktur, der Texterkennung oder Autobahnabschnitten) bzw. wegen Anpassungen bei der Weitergabe von Informationen per Mail oder SMS. Diese Anpassungen können Sie alle im Skript `ocr/readfile.php` vornehmen.
@@ -69,4 +70,4 @@ Ich würde mich freuen, wenn Sie mir ein kurzes Feedback geben, wo die Software 
 
 # Haftungsausschluss und Datenschutz
 Ich übernehme keine Haftung für die Funktion der Software vor Ort.
-Da über diese Software sensible Personenbezogene Daten verarbeitet werden, ist der Datenschutz vor Ort insbesondere zu beachten. Vor allem sollte ein Augenmerk auf die *Datensparsamkeit* gelegt werden. Damit verbunden ist die strenge Entscheidung, wer welche Daten per E-Mail oder SMS weitergeleitet bekommt. Im Zweifel ist der Programmcode entsprechend anzupassen.
+Da über diese Software sensible personenbezogene Daten verarbeitet werden, ist der Datenschutz vor Ort insbesondere zu beachten. Vor allem sollte ein Augenmerk auf die *Datensparsamkeit* gelegt werden. Damit verbunden ist die strenge Entscheidung, wer welche Daten per E-Mail oder SMS weitergeleitet bekommt. Im Zweifel ist der Programmcode entsprechend anzupassen.

@@ -1,0 +1,25 @@
+Sollte auf dem System installiert sein:
+sudo apt-get install openssl build-essential libssl-dev libxrender-dev libqt4-dev qt4-dev-tools motion imagemagick cuneiform xdotool
+
+
+wktopdf muss installiert werden!
+--> downloaden, anschließen kompilieren als root: qmake-qt4; make; make install
+
+motion konfigurieren, siehe Konfig-Datei.
+
+
+Für Apache libcurl integrieren, sonst geht SMS nicht.
+
+Dateirechte setzen: Auf readfile.php, auf die Shellskripte und die Dateien in /tmp anlegen: latest-fax.txt und screen.jpg
+
+/var/spool/hylafax/bin/faxrcvd ergänzen um zwei Befehle:
+1: /usr/bin/cuneiform --singlecolumn --fax -l ger -o /tmp/latest-fax.txt $FILE
+2: /usr/bin/php /var/www/alarmdisplay/ocr/readfile.php /tmp/latest-fax.txt
+
+Absturzmeldungen ausschalten --> enabled=0 in /etc/default/apport
+
+
+
+
+
+

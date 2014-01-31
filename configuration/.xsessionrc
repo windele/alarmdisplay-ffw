@@ -1,0 +1,3 @@
+xhost +si:localuser:www-data
+xhost +si:localuser:motion
+xhost +si:localuser:uucp

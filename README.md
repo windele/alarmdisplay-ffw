@@ -109,8 +109,8 @@ Legen Sie auf Ihrem Datenbankserver mit der vorgegebenen Datei `configuration/al
 Konfigurieren Sie den Hylafax-Server so, dass er bei jedem eingegangenen Fax die Texterkennung anstösst und die Daten an das Einlese-Skript `ocr/readfile.php` weitergibt.
 Ergänzen Sie dazu die Datei `/var/spool/hylafax/bin/faxrcvd` um zwei Befehle:
 
-   `/usr/bin/cuneiform --singlecolumn --fax -l ger -o /tmp/latest-fax.txt $FILE`
-   `/usr/bin/php /var/www/alarmdisplay/ocr/readfile.php /tmp/latest-fax.txt`
+`/usr/bin/cuneiform --singlecolumn --fax -l ger -o /tmp/latest-fax.txt $FILE`
+`/usr/bin/php /var/www/alarmdisplay/ocr/readfile.php /tmp/latest-fax.txt`
 
 
 ### Konfigurieren Sie Benutzernamen und Passwörter für den Datenbankzugriff
@@ -125,7 +125,7 @@ Konfigurieren Sie diese Seite als Startseite und stellen Ihr Linux-System so ein
 ### Anzeige testen
 Die Erfahrung zeigt, dass das Faxen eines bestehenden Papierfaxes an das Display auch in feinster Auflösung nicht zur gewünschten Texterkennungsrate führt, um ausreichende Tests durchzuführen. Deswegen können Sie zum Testen der Anzeige das Empfangen des Faxes überspringen und Testdaten händisch in die Datenbank einspielen. Hierzu können Sie die enthaltene Textdatei `configuration/testfax.txt`nutzen. Auf der Konsole können Sie mit 
 
-    `/usr/bin/php /var/www/alarmdisplay/ocr/readfile.php /var/www/alarmdisplay/configuration/testfax.txt`
+`/usr/bin/php /var/www/alarmdisplay/ocr/readfile.php /var/www/alarmdisplay/configuration/testfax.txt`
 
 die Daten per Hand einspielen. Dieser Befehl simuliert die Übergabe des umgewandelten Alarmfax an die Einleseroutine. Durch ändern der Testdatei können Sie mehrere Testszenarien abdecken.
 **Achtung:** Prüfen Sie trotzdem vorab durch Testfaxe, ob Ihr Faxserver grundsätzlich Faxe richtig annimmt.

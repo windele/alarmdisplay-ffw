@@ -52,14 +52,17 @@ Für die komplette Funktion wird ein laufendes Linux-System mit grafischer Oberf
 ## Installation weiterer Tools
 ### Serverkomponenten
 Für den Betrieb des Alarmdisplays brauchen Sie auf Ihrem Rechner einen Faxserver, einen mySQL-Datenbankserver und einen Webserver. Installieren Sie die Pakete HylaFax, mySQL und Apache bzw. lighttpd nach. Dies können Sie über die Paketverwaltung Ihrer Distribution oder mit dem Befehl
-    sudo apt-get install mysql-server hylafax-server lighttpd
+
+`sudo apt-get install mysql-server hylafax-server lighttpd`
+
 erledigen. Alternative zu lighttpd ist Apache.
 Merken Sie sich das bei der Installation gesetzte Datenbank-Master-Passwort!
 
 
 ### Weitere Tools
 Installieren Sie auch folgende Softwarepakete:
-    sudo apt-get install openssl build-essential libssl-dev libxrender-dev libqt4-dev qt4-dev-tools motion imagemagick cuneiform xdotool php5 curl
+
+`sudo apt-get install openssl build-essential libssl-dev libxrender-dev libqt4-dev qt4-dev-tools motion imagemagick cuneiform xdotool php5 curl`
 
 
 ### Screenshot-Tool
@@ -70,7 +73,8 @@ Als Alternative, falls der Zugriff auf den XServer nicht klappt, wäre der Einsa
 
 ### Installieren von nützlichen Tools
 Installieren Sie PHPmyAdmin - erstens ist es ein nützliches Tool und es werden durch die Paketabhängigkeiten die Softwarepakete so eingerichtet, dass das Display laufen sollte.
-    sudo apt-get install phpmyadmin
+
+    `sudo apt-get install phpmyadmin`
 
 
 ### Richten Sie sich einen Standarddrucker ein
@@ -103,8 +107,9 @@ Legen Sie auf Ihrem Datenbankserver mit der vorgegebenen Datei `configuration/al
 ### Schaffen Sie die Brücke zwischen Faxserver und Faxverarbeitung
 Konfigurieren Sie den Hylafax-Server so, dass er bei jedem eingegangenen Fax die Texterkennung anstösst und die Daten an das Einlese-Skript `ocr/readfile.php` weitergibt.
 Ergänzen Sie dazu die Datei `/var/spool/hylafax/bin/faxrcvd` um zwei Befehle:
-    /usr/bin/cuneiform --singlecolumn --fax -l ger -o /tmp/latest-fax.txt $FILE
-    /usr/bin/php /var/www/alarmdisplay/ocr/readfile.php /tmp/latest-fax.txt
+
+   `/usr/bin/cuneiform --singlecolumn --fax -l ger -o /tmp/latest-fax.txt $FILE`
+   `/usr/bin/php /var/www/alarmdisplay/ocr/readfile.php /tmp/latest-fax.txt`
 
 
 ### Konfigurieren Sie Benutzernamen und Passwörter für den Datenbankzugriff
@@ -118,7 +123,9 @@ Konfigurieren Sie diese Seite als Startseite und stellen Ihr Linux-System so ein
 
 ### Anzeige testen
 Die Erfahrung zeigt, dass das Faxen eines bestehenden Papierfaxes an das Display auch in feinster Auflösung nicht zur gewünschten Texterkennungsrate führt, um ausreichende Tests durchzuführen. Deswegen können Sie zum Testen der Anzeige das Empfangen des Faxes überspringen und Testdaten händisch in die Datenbank einspielen. Hierzu können Sie die enthaltene Textdatei `configuration/testfax.txt`nutzen. Auf der Konsole können Sie mit 
-    /usr/bin/php /var/www/alarmdisplay/ocr/readfile.php /var/www/alarmdisplay/configuration/testfax.txt
+
+    `/usr/bin/php /var/www/alarmdisplay/ocr/readfile.php /var/www/alarmdisplay/configuration/testfax.txt`
+
 die Daten per Hand einspielen. Dieser Befehl simuliert die Übergabe des umgewandelten Alarmfax an die Einleseroutine. Durch ändern der Testdatei können Sie mehrere Testszenarien abdecken.
 **Achtung:** Prüfen Sie trotzdem vorab durch Testfaxe, ob Ihr Faxserver grundsätzlich Faxe richtig annimmt.
 

@@ -62,7 +62,8 @@ Merken Sie sich das bei der Installation gesetzte Datenbank-Master-Passwort!
 ### Weitere Tools
 Installieren Sie auch folgende Softwarepakete:
 
-`sudo apt-get install openssl build-essential libssl-dev libxrender-dev libqt4-dev qt4-dev-tools motion imagemagick cuneiform xdotool php5 curl`
+`sudo apt-get install openssl build-essential libssl-dev libxrender-dev libqt4-dev`
+`sudo apt-get install qt4-dev-tools motion imagemagick cuneiform xdotool php5 curl`
 
 
 ### Screenshot-Tool
@@ -74,7 +75,7 @@ Als Alternative, falls der Zugriff auf den XServer nicht klappt, wäre der Einsa
 ### Installieren von nützlichen Tools
 Installieren Sie PHPmyAdmin - erstens ist es ein nützliches Tool und es werden durch die Paketabhängigkeiten die Softwarepakete so eingerichtet, dass das Display laufen sollte.
 
-    `sudo apt-get install phpmyadmin`
+`sudo apt-get install phpmyadmin`
 
 
 ### Richten Sie sich einen Standarddrucker ein

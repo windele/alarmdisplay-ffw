@@ -75,7 +75,7 @@ for ($zeile=0; $zeile<$faxlaenge; $zeile++)
 	$replacement = ":";
 	$alarmfax[$zeile] = str_replace($searching, $replacement, $alarmfax[$zeile]);
 
-	// Piflas sollte richtig erkannt werden
+	// Ortsname sollte richtig erkannt werden
 	$patterns = array();
 	$patterns[0] = '/P(\s)?i(\s)?f(\s)?l(\s)?a(\s)?s/';
 	$patterns[1] = '/PifIas/';
@@ -83,6 +83,11 @@ for ($zeile=0; $zeile<$faxlaenge; $zeile++)
 	$patterns[3] = '/PfiIas/';
 	$replacement = 'Piflas';
 	$alarmfax[$zeile] = preg_replace($patterns, $replacement, $alarmfax[$zeile]);
+
+	// Entfernen der von der Texterkennung erkannten Trennlinien
+	$pattern = '/[-‒\s]{5,}(?=\w{5,})|(?<=\w)[-‒\s]{5,}/'; 
+	$replacement = '';
+	$alarmfax[$zeile] = preg_replace($pattern, $replacement, $alarmfax[$zeile]);
 
 	// Leerzeichen bei den 2.1.x Kennungen
 	$patterns = array();
@@ -497,11 +502,13 @@ if ($einsatzgrund != "")
 		$text .= "---------------------------------------------------\n";
 		$text .= "Zeitstempel Faxeingang: ".strftime("%A, %d.%m.%Y // %H:%M")."\n";	
 		
-		// Link auf Google Maps, falls wir nicht auf der Autobahn sind.
+		// Link auf Google Maps und Navigationssoftware, falls wir nicht auf der Autobahn sind.
 		if (substr($strasse, 0, 3)!="A92") 
 		{
 			$text .= "Karte: \n";
 			$text .= "http://maps.google.de/maps?q=".str_replace(" ", "+", trim($strasse))."+".str_replace(" ", "+", trim($hausnr)).",".str_replace(" ", "+", trim($ort))."\n";
+			$text .= "Handy-Navigation für Telekom-Smartphones: \n";
+			$text .= "navigon://address/Einsatzstelle/DEU/".str_replace("%26%26", "/",rawurlencode(str_replace(" ", "&&", trim($ort))))."/".rawurlencode(trim($strasse))."/".rawurlencode(trim($hausnr))."\n";
 		}
 		$text .= "---------------------------------------------------\n";
 		$text .= "Automatisch generiert durch Alarmdisplay FF Piflas \n\n";

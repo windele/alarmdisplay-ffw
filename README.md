@@ -5,13 +5,18 @@ Diese Software kann bei Feuerwehren dazu verwendet werden, die Informationen des
 
 ## Funktionsumfang
 - **Digitale Uhr**: Im Ruhezustand zeigt das Alarmdisplay in großen Lettern eine Uhr und das Datum an. 
+
 - **Hinweistexte**: Das Alarmdisplay kann als digitales Schwarzes Brett genutzt werden. Es können bis zu fünf Hinweistexte hinterlegt werden, die abwechselnd den Bildschirm füllen. Jeder Hinweistext kann mit einem Start- und Ende-Datum versehen werden, was eine automatische Anzeige ermöglicht.
+
 - **Einsatzvisualisierung und Einsatzkräfteinfo**: Im Alarmfall zeigt das Alarmdisplay die Einsatzdaten aus dem Alarmfax an. Zusätzlich wird der Einsatzort und die Anfahrt dorthin auf einer Karte visualisiert. Ein Versand der Daten per E-Mail an die Einsatzkräfte, der Versand einer SMS (kostenpflichtig über den Partner [RettAlarm](http://www.rettalarm.de) oder der Ausdruck einer Anfahrtsroutenbeschreibung sind ebenfalls Teil des Programms.
+
 - **Administrationsmenü**: Fast alle Parameter der Software können über ein Administrationsmenü eingestellt werden.
 
 
 ## Historie
-Die Software wurde bei der [Freiwilligen Feuerwehr Piflas](http://www.feuerwehr-piflas.de) zum ersten Mal eingesetzt. Viele der enthaltenen Funktionen sind deswegen speziell auf die Belange dieser Feuerwehr bzw. deren Umgebung angepasst. Vielleicht ändert sich im Laufe der Zeit der Funktionsumfang im Rahmen der Weiterentwicklung.
+Die Software wurde bei der [Freiwilligen Feuerwehr Piflas](http://www.feuerwehr-piflas.de) im Jahr 2012 zum ersten Mal eingesetzt. Seit Mitte 2012 läuft die Software ohne Komplikationen durch und wurde im Laufe der Zeit um weitere Funktionen ergänzt.
+
+Viele der enthaltenen Funktionen sind deswegen speziell auf die Belange dieser Feuerwehr bzw. deren Umgebung angepasst. Vielleicht ändert sich weiterhin im Laufe der Zeit der Funktionsumfang im Rahmen der Weiterentwicklung.
 
 
 ## Realisation & Systemvoraussetzungen
@@ -46,7 +51,10 @@ Verwendet wurden:
 
 # Installation
 ## Grundsystem
-Für die komplette Funktion wird ein laufendes Linux-System mit grafischer Oberfläche angenommen. Es sollte ein Internet-Browser installiert sein, der den Vollbildmodus unterstützt. Die weiteren Beschreibungen gehen davon aus, dass ein Ubuntu- bzw. Debian-System installiert wurde.
+Für die komplette Funktion wird ein laufendes Linux-System mit grafischer Oberfläche angenommen. Konfigurieren Sie das System so, dass ein Benutzer automatisch angemeldet wird.
+Es sollte ein Internet-Browser installiert sein, der den Vollbildmodus unterstützt. Konfigurieren Sie den Browser als Autostart-Programm, der beim Systemstart automatishc ausgeführt wird.
+Stellen Sie u.U. auch im BIOS des Rechners ein, dass das System nach Stromausfall automatisch wieder startet - sonst ist Ihr System nach Stromausfall nicht betriebsbereit. Besser wäre es natürlich, das System mit einer USV abzusichern, damit dieser Fall gar nicht erst passiert.
+Die weiteren Beschreibungen gehen davon aus, dass ein Ubuntu- bzw. Debian-System installiert wurde.
 
 
 ## Installation weiterer Tools
@@ -68,7 +76,10 @@ Installieren Sie auch folgende Softwarepakete:
 
 ### Screenshot-Tool
 Für den korrekten Ausdruck ist ein Screenshot-Tool notwendig - ich empfehle wkhtmltopdf. Diese Software können Sie einfach herunterladen: [wkhtmltopdf](http://code.google.com/p/wkhtmltopdf/).
-Damit die Software korrekt funktioniert, müssen Sie dem Benutzer des FaxServers den Zugriff auf den X-Server erlauben: `sudo xhost +uucp`. 
+Sie finden auf der angegebenen Seite auch Hilfestellung, wie Sie den heruntergeladenen Quelltext kompilieren und die fertigen Programme installieren können.
+
+Damit die Software korrekt funktioniert, müssen Sie dem Benutzer des FaxServers den Zugriff auf den X-Server erlauben. Kopieren Sie dazu die Datei `.xsessionsrc` in das Home-Verzeichnis des Benutzers, der bei Betrieb des Displays angemeldet ist:  `cp /var/www/alarmdisplay/configuration/.xsessionrc ~`. Beim nächsten Neustart sollte das Screenshot-Tool reibungslos funktionieren.
+
 Als Alternative, falls der Zugriff auf den XServer nicht klappt, wäre der Einsatz des Tools vfb denkbar (Anleitung siehe [hier](http://ciaranmcnulty.com/converting-html-to-pdf-using-wkhtmltopdf)), allerdings müssen dann einige der Shellscripte angepasst werden.
 
 
@@ -83,7 +94,8 @@ Konfiguriere Sie einen Drucker so, dass er über das `lpr`-Kommando angesprochen
 
 
 ### Konfigurieren Sie den Faxserver
-Schließen Sie das Modem an den PC an und führen Sie `sudo faxsetup`aus. Ein Installationsassistent richtet dann Modem und Faxserver ein.
+Schließen Sie das Modem an den PC an und führen Sie `sudo faxsetup`, anschließend dann `sudo faxaddmodem` aus. Die Installationsassistenten richten dann Modem und Faxserver ein. (Tipp: Wenn Sie ein USB-Modem besitzen, ist die richtige Schnittstelle meist `ttyACM0`).
+
 Wenn Sie ein USB-Modem von US-Robotics (6537??) nutzen, könnte die im Paket enthaltene Konfigurationsdatei nützlich sein - benennen Sie dazu die `configuration/config.ttyACM0_USR_USB_MODEM` in `configuration/config.ttyACM0` um und kopieren Sie die Datei in den Hylafax-Konfigurationsordner. 
 
 
@@ -93,7 +105,6 @@ Installation von cuneiform: `sudo apt-get install cuneiform`
 
 Installation von Tesseract: `sudo apt-get install tesseract-ocr tesseract-ocr-deu`
 Bei der Verwendung von Tesseract können Sie die enthaltene Trainingsdatei `configuration/ils.traineddata` in den Ordner `/usr/share/tesseract-ocr/tessdata/` kopieren - dies hilft Ihnen, die ILS-Faxe schneller einzulesen.
-**Empfehlung**: Ich empfehle momentan auf Prozessoren der x386-Plattform die Software cuneiform zu verwenden, da alle Skripte auf diese ausgerichtet sind. Bei der Verwendung von Tesseract müssen die Skripte so angepasst werden, dass das Einlesescript `ocr/readfile.php` die Trennlinien (mehrere - hintereinander). Diese Softwareergänzung wird erst in der nächsten Softwareversion vorgenommen.
 
 
 ## Installieren der Alarmdisplay-Software
@@ -107,9 +118,22 @@ Legen Sie auf Ihrem Datenbankserver mit der vorgegebenen Datei `configuration/al
 
 ### Schaffen Sie die Brücke zwischen Faxserver und Faxverarbeitung
 Konfigurieren Sie den Hylafax-Server so, dass er bei jedem eingegangenen Fax die Texterkennung anstösst und die Daten an das Einlese-Skript `ocr/readfile.php` weitergibt.
-Ergänzen Sie dazu die Datei `/var/spool/hylafax/bin/faxrcvd` um zwei Befehle:
+Ergänzen Sie dazu die Datei `/var/spool/hylafax/bin/faxrcvd` um **zwei** Befehle.
 
-`/usr/bin/cuneiform --singlecolumn --fax -l ger -o /tmp/latest-fax.txt $FILE`
+Das **erste Kommando** stößt die Texterkennung an. 
+
+- Wenn Sie Cuneiform verwenden, lautet der Befehl:
+
+ `/usr/bin/cuneiform --singlecolumn --fax -l ger -o /tmp/latest-fax.txt $FILE`
+
+- Wenn Sie Tesseract einsetzen, lautet der Befehl:
+
+ `/usr/bin/tesseract $FILE /tmp/latest-fax -l ils -psm 6` 
+
+ Verwenden Sie die Option `-l ils` nur dann, wenn Sie die trainierte Sprachdatei wie oben beschrieben verwenden. Wenn Sie Tesseract out-of-the-box verwenden, lautet die Option `-l deu` (tesseract-ocr-deu = Deutsches Sprachpaket muss aber dann installiert sein).
+
+Der **zweite Befehl** lässt die umgewandelte Textdatei in die Datenbank einlesen und Aktionen wie Drucken, Mail, SMS starten:
+
 `/usr/bin/php /var/www/alarmdisplay/ocr/readfile.php /tmp/latest-fax.txt`
 
 

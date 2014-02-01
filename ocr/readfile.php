@@ -2,7 +2,7 @@
 
 /*
 ALARMDISPLAY FEUERWEHR PIFLAS
-Copyright 2012 Stefan Windele
+Copyright 2012-2014 Stefan Windele
 
 Version 1.0.0
 

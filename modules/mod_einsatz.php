@@ -1,4 +1,4 @@
-<?
+<?php 
 
 /*
 ALARMDISPLAY FEUERWEHR PIFLAS
@@ -85,20 +85,20 @@ for($i=11; $i<61; $i++)
 
 <div class="container">
 	
-	<? // Absatz mit den blinkenden Lampen - HTML-Tags werden automatisch aus Array $fahrzeuge gesetzt. ?>
+	<?php  // Absatz mit den blinkenden Lampen - HTML-Tags werden automatisch aus Array $fahrzeuge gesetzt. ?>
 	<div class="span-20 last">
 	<table align="center" border="1">
 		<tr>
-		<td bgcolor="<? echo $fahrzeuge["RW"] ?>">RW<br>62/1</h3></td>
-		<td bgcolor="<? echo $fahrzeuge["TLF"] ?>">TLF<br>21/1</h3></td>
-		<td bgcolor="<? echo $fahrzeuge["LF"] ?>">LF<br>47/1</h3></td>
-		<td bgcolor="<? echo $fahrzeuge["MZF"] ?>">MZF<br>11/1</h3></td>
-		<td bgcolor="<? echo $fahrzeuge["VSA"] ?>">VSA</h3></td>
+		<td bgcolor="<?php  echo $fahrzeuge["RW"] ?>">RW<br>62/1</h3></td>
+		<td bgcolor="<?php  echo $fahrzeuge["TLF"] ?>">TLF<br>21/1</h3></td>
+		<td bgcolor="<?php  echo $fahrzeuge["LF"] ?>">LF<br>47/1</h3></td>
+		<td bgcolor="<?php  echo $fahrzeuge["MZF"] ?>">MZF<br>11/1</h3></td>
+		<td bgcolor="<?php  echo $fahrzeuge["VSA"] ?>">VSA</h3></td>
 		</tr>
 	</table>	
 	</div>
 
-<?
+<?php 
 
 // Bei Autobahn brauchen wir keine Karte. Würde eh nicht funktionieren.
 if (substr($row[3], 0, 3)=="A92")
@@ -113,7 +113,7 @@ echo "<div class='span-10'>";
 
 		<div class="error">
 		<h1>
-		<? // Schlagwort
+		<?php  // Schlagwort
 		echo $row[8];
 		?>
 		</h1>
@@ -121,7 +121,7 @@ echo "<div class='span-10'>";
 
 		<div class="error">
 		<h1>
-		<? // Anschrift, Objekt und Station
+		<?php  // Anschrift, Objekt und Station
 		echo $row[3]." ".$row[4]; 
 		if($row[5]!="") echo "<br />".$row[5];
 		if($row[6]!="") echo "<br /><h2>".$row[6]."</h2>";
@@ -132,13 +132,13 @@ echo "<div class='span-10'>";
 
 		<div class="notice">
 		<h2 align="center">
-		<? // Bemerkung
+		<?php  // Bemerkung
 		echo $row[10];
 		?>
 		</h2>
 		</div>
 
-		<? if ($parameter['EINSATZHINWEIS'] != "")
+		<?php  if ($parameter['EINSATZHINWEIS'] != "")
 		{
 		if ($parameter['BLINKALARM'] == "true") {$style="style='text-decoration:blink;'";} else {$style="";}
 		echo "<div class='error' ".$style."><h2 align='center'>";
@@ -150,19 +150,19 @@ echo "<div class='span-10'>";
 
 		<div class="info">
 		<legend>Priorit&auml;t: 
-		<? // Prio
+		<?php  // Prio
 		echo $row[9]." &bull; ";
 		?>Mitteiler:
-		<? // Mitteiler
+		<?php  // Mitteiler
 		echo $row[2];
 		?> &bull; Alarmzeit: <span style="font-size: 200%;"> 
-		<? // Alarmzeit
+		<?php  // Alarmzeit
 		echo date("H:i",$row[61]);
 
 		?>		
 		</span></legend>
 		
-		<?
+		<?php 
 		// Wir prüfen mal, ob wir denn den FMS Status anzeigen sollen
 		if ($parameter['FMSSTATUSALARM'] == "true")
 		{
@@ -179,7 +179,7 @@ echo "<div class='span-10'>";
 
 		<div class="success">
 		<legend><span style="font-size:200%; line-height:1.1;">Alarmiert:&nbsp;
-		<?
+		<?php 
 		echo $row[11];
 		for($i=12; $i<61; $i++) 
 		{
@@ -193,7 +193,7 @@ echo "<div class='span-10'>";
 
 
 
-<?
+<?php 
 // Bei Autobahn brauchen wir keine Karte. Würde eh nicht funktionieren.
 if (substr($row[3], 0, 3)!="A92")
 {

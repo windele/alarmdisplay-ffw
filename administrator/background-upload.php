@@ -1,4 +1,4 @@
-<?php
+<?php 
 $dateityp = GetImageSize($_FILES['datei']['tmp_name']);
 
 if($dateityp[2] = 3)

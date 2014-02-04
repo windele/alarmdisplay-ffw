@@ -1,4 +1,4 @@
-<?
+<?php 
 
 /*
 ALARMDISPLAY FEUERWEHR PIFLAS
@@ -70,7 +70,7 @@ $db->close();
     geocoder = new google.maps.Geocoder();
     var latlng = new google.maps.LatLng(48.55453, 12.162039999999934);
     var myOptions = {
-      zoom: <? echo $parameter['MAPZOOMSTADT']; ?>,
+      zoom: <?php  echo $parameter['MAPZOOMSTADT']; ?>,
       center: latlng,
       disableDefaultUI: true,
       mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -82,7 +82,7 @@ $db->close();
 
   function codeAddress() {
     // ACHTUNG: Adresse muss UTF-8-codiert von PHP übergeben werden!!!! Sonst Umlaute kaputt.
-    var address = "<? echo $_GET['strasse']." ".$_GET['hausnr'].", ".$_GET['ort'] ?>";
+    var address = "<?php  echo $_GET['strasse']." ".$_GET['hausnr'].", ".$_GET['ort'] ?>";
     geocoder.geocode( { 'address': address}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
         map.setCenter(results[0].geometry.location);
@@ -100,15 +100,15 @@ function zoome()
 { 
 	// Feststellen, ob wir noch in unserem Ortsgebiet sind
 	var ortaufkarte = document.getElementById("ortaufkarte").value;
-	var ergebnis = ortaufkarte.search(/<? echo $parameter['MAPUMFELD']; ?>/i);
-	var zoomlevel = <? echo $parameter['MAPZOOMSTADT']; ?>;
+	var ergebnis = ortaufkarte.search(/<?php  echo $parameter['MAPUMFELD']; ?>/i);
+	var zoomlevel = <?php  echo $parameter['MAPZOOMSTADT']; ?>;
 	if (ergebnis != -1)
 	{
 		// Wir sind im Ortsgebiet
-		zoomlevel = <? echo $parameter['MAPZOOMSTADT']; ?>;
+		zoomlevel = <?php  echo $parameter['MAPZOOMSTADT']; ?>;
 	} else {
 		// Wir sind auf dem Land
-		zoomlevel = <? echo $parameter['MAPZOOMLAND']; ?>;
+		zoomlevel = <?php  echo $parameter['MAPZOOMLAND']; ?>;
 	}
 	
 	map.setZoom(zoomlevel); 
@@ -119,7 +119,7 @@ function zoome()
 </head>
 
 <body onload="initialize()">
-  <input type="hidden" id="ortaufkarte" value="<? echo $_GET['ort']; ?>">
+  <input type="hidden" id="ortaufkarte" value="<?php  echo $_GET['ort']; ?>">
   <div id="map_canvas" style="width:100%; height:100%"></div>
 
 </body>

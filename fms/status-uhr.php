@@ -1,4 +1,4 @@
-<?
+<?php 
 
 /*
 ALARMDISPLAY FEUERWEHR PIFLAS
@@ -101,7 +101,7 @@ if (@$_GET["bildist"])
 <link rel='stylesheet' href='../css/fms.css' type='text/css' media='screen, projection'>
 </head>
 
-<?
+<?php 
 
 // Stellen wir mal das aktuelle FMS-Bild fest.
 $bildist = anzeigebild_feststellen();

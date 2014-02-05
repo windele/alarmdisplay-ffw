@@ -1,4 +1,4 @@
-<?php 
+<?php  
 
 /*
 ALARMDISPLAY FEUERWEHR PIFLAS
@@ -138,7 +138,7 @@ jQuery(function(jQuery)
 
 
 
-<?
+<?php 
 
 // Wird das Formular zum Speichern aufgerufen?
 if (isset($_POST['submit']))
@@ -300,7 +300,7 @@ $tabs->close();
 </form><br /><br />
 
 
-<?
+<?php 
 
 // Sollen wir die Upload-Funktion für Bilder anzeigen? Lasst uns nachsehen.
 $result = $db->query("SELECT wert FROM tbl_adm_params WHERE parameter='EIGENESLOGO'");

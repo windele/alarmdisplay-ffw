@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 /*
  * phpMyEdit - instant MySQL table editor and code generator

@@ -1,4 +1,4 @@
-<?
+<?php 
 
 /*
 ALARMDISPLAY FEUERWEHR PIFLAS
@@ -93,8 +93,8 @@ function calcRoute() {
 
 
   var request = {
-    origin:"<? echo $parameter['MAPFFWHAUS']; ?>",
-    destination: "<? echo $_GET['strasse']." ".$_GET['hausnr'].", ".$_GET['ort'] ?>",
+    origin:"<?php  echo $parameter['MAPFFWHAUS']; ?>",
+    destination: "<?php  echo $_GET['strasse']." ".$_GET['hausnr'].", ".$_GET['ort'] ?>",
     travelMode: google.maps.TravelMode.DRIVING
   };
 
@@ -120,15 +120,15 @@ function zoome()
 { 
 	// Feststellen, ob wir noch in unserem Ortsgebiet sind
 	var ortaufkarte = document.getElementById("ortaufkarte").value;
-	var ergebnis = ortaufkarte.search(/<? echo $parameter['MAPUMFELD']; ?>/i);
-	var zoomlevel = <? echo $parameter['ROUTEZOOMSTADT']; ?>;
+	var ergebnis = ortaufkarte.search(/<?php  echo $parameter['MAPUMFELD']; ?>/i);
+	var zoomlevel = <?php  echo $parameter['ROUTEZOOMSTADT']; ?>;
 	if (ergebnis != -1)
 	{
 		// Wir sind im Ortsgebiet
-		zoomlevel = <? echo $parameter['ROUTEZOOMSTADT']; ?>;
+		zoomlevel = <?php  echo $parameter['ROUTEZOOMSTADT']; ?>;
 	} else {
 		// Wir sind auf dem Land
-		zoomlevel = <? echo $parameter['ROUTEZOOMLAND']; ?>;
+		zoomlevel = <?php  echo $parameter['ROUTEZOOMLAND']; ?>;
 	}
 	
 	map.setZoom(zoomlevel); 
@@ -139,7 +139,7 @@ function zoome()
 </head>
 
 <body onload="initialize()">
-  <input type="hidden" id="ortaufkarte" value="<? echo $_GET['ort']; ?>">
+  <input type="hidden" id="ortaufkarte" value="<?php  echo $_GET['ort']; ?>">
   <div id="map_canvas" style="width:100%; height:100%"></div>
 
 </body>

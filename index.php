@@ -1,4 +1,4 @@
-<?
+<?php 
 
 /*
 ALARMDISPLAY FEUERWEHR PIFLAS
@@ -151,13 +151,13 @@ if (@$_GET["bildist"])
 <!DOCTYPE html>
 <html>
 <head>
-<title>Alarmdisplay - <?echo $parameter['NAMEFEUERWEHR'];?></title>
+<title>Alarmdisplay - <?php echo $parameter['NAMEFEUERWEHR'];?></title>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <script type="text/javascript" src="js/alarmdisplay.js"></script>
 <link rel='stylesheet' href='css/screen.css' type='text/css' media='screen, projection'>
 </head>
 
-<?
+<?php 
 
 // Was sollen wir überhaupt anzeigen?
 $bildist = anzeigebild_feststellen();

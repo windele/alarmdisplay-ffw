@@ -1,4 +1,4 @@
-<?
+<?php 
 
 /*
 ALARMDISPLAY FEUERWEHR PIFLAS
@@ -40,10 +40,10 @@ else
 
 <tr height="100%">
 <td align="center" valign="middle">
-<span id="uhr" style="color: <? echo $parameter['UHRFARBE']; ?>; font-size: 2800%; font-weight:bolder; margin:0;"><br />JavaScript aktivieren!</span><br />
-<span id="datum" class="datum" style="color: <? echo $parameter['UHRFARBE']; ?>; font-size: 600%; font-weight: bold; margin-bottom:1em;">JavaScript aktivieren!</span><br><br>
+<span id="uhr" style="color: <?php  echo $parameter['UHRFARBE']; ?>; font-size: 2800%; font-weight:bolder; margin:0;"><br />JavaScript aktivieren!</span><br />
+<span id="datum" class="datum" style="color: <?php  echo $parameter['UHRFARBE']; ?>; font-size: 600%; font-weight: bold; margin-bottom:1em;">JavaScript aktivieren!</span><br><br>
 
-<?
+<?php 
 // Wir prüfen mal, ob wir einen Hinweistext haben.
 if ($parameter['UHRTEXT'] != "")
 {

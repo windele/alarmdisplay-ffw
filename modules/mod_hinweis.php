@@ -1,4 +1,4 @@
-<?
+<?php 
 
 /*
 ALARMDISPLAY FEUERWEHR PIFLAS
@@ -45,14 +45,14 @@ echo "<input type='hidden' id='text-".($i+1)."' value='".$hinweistexte[$i]."'>";
 <tr height="90%">
 <td align="center" valign="middle" style="height:600px; text-align:center;" colspan="3">
 
-<span id="hinweistext" style="color: <? echo $parameter['HINWEISSCHRIFT']; ?>; line-height:1.2;font-size: 550%; font-weight: bold; margin-bottom:1em;"><? echo $hinweistexte[0];?></span>
+<span id="hinweistext" style="color: <?php  echo $parameter['HINWEISSCHRIFT']; ?>; line-height:1.2;font-size: 550%; font-weight: bold; margin-bottom:1em;"><?php  echo $hinweistexte[0];?></span>
 
 </td></tr>
 
 <tr>
-<td style='text-align:left;' valign='bottom' width='33%'><span id="datum" style="color: <? echo $parameter['UHRFARBE']; ?>; font-size: 300%; font-weight: bold; margin-bottom:1em;">JavaScript aktivieren!</span></td>
-<td style='text-align:center;' valign='bottom' width='33%'><span id="fortschritt" style="color: <? echo $parameter['UHRFARBE']; ?>; font-size: 300%; font-weight: bold; margin-bottom:1em;"></span></td>
-<td style='text-align:right;'  valign='bottom' width='33%'><span id="uhr" style="color: <? echo $parameter['UHRFARBE']; ?>; font-size: 300%; font-weight:bold; margin:0;">JavaScript aktivieren!</span></td></tr>
+<td style='text-align:left;' valign='bottom' width='33%'><span id="datum" style="color: <?php  echo $parameter['UHRFARBE']; ?>; font-size: 300%; font-weight: bold; margin-bottom:1em;">JavaScript aktivieren!</span></td>
+<td style='text-align:center;' valign='bottom' width='33%'><span id="fortschritt" style="color: <?php  echo $parameter['UHRFARBE']; ?>; font-size: 300%; font-weight: bold; margin-bottom:1em;"></span></td>
+<td style='text-align:right;'  valign='bottom' width='33%'><span id="uhr" style="color: <?php  echo $parameter['UHRFARBE']; ?>; font-size: 300%; font-weight:bold; margin:0;">JavaScript aktivieren!</span></td></tr>
 
 
 </table>

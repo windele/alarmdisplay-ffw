@@ -1,4 +1,4 @@
-<?
+<?php 
 
 /*
 ALARMDISPLAY FEUERWEHR PIFLAS
@@ -50,7 +50,7 @@ require('../config.inc.php');
 	a {color: #FFFFFF; }
 </style>
 
-<?php
+<?php 
 
 /*
  * IMPORTANT NOTE: This generated file contains only a subset of huge amount

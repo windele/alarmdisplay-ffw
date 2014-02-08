@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS `tbl_einsaetze` (
   `bemerkung` varchar(400) COLLATE utf8_unicode_ci DEFAULT NULL,
   `dispo` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Tabelle für Einsatzdaten Alarmdisplay Feuerwehr Piflas';
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='Tabelle für Einsatzdaten Alarmdisplay Feuerwehr Piflas';
 
 -- Exportiere Daten aus Tabelle alarmdisplay.tbl_einsaetze: 0 rows
 /*!40000 ALTER TABLE `tbl_einsaetze` DISABLE KEYS */;

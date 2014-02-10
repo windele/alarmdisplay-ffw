@@ -135,7 +135,7 @@ if (substr($row[3], 0, 3) == "A92") {
 <?php
 if ($parameter['EINSATZHINWEIS'] != "") {
 	if ($parameter['BLINKALARM'] == "true") {
-		$style = "style='text-decoration:blink;'";
+		$style = "style='animation: blink 1s steps(5, start) infinite;'";
 	} else {
 		$style = "";
 	}

@@ -344,7 +344,8 @@ if ($einsatzgrund != "") {
 
 		// SMS-Inhalt bauen
 		$smstext = "ALARM (" . date("H:i") . "): " . $einsatzgrund . "- " . $objekt . " " . $strasse . " " . $hausnr . " " . $ort . "/ " . $bemerkung;
-
+		$smstext= substr($smstext, 0, 159);
+		
 		//URL zusammenbauen
 		$url = 'http://www.RA-Server.de/webin.php?log_user=';
 		$url .= urlencode($parameter["SMSUSER"]) . '&log_pass=';
@@ -356,7 +357,7 @@ if ($einsatzgrund != "") {
 			$url .= '&flash=1';
 		}
 
-		$url .= '&free=' . urlencode($smstext);
+		$url .= '&free=' . urlencode(utf8_decode($smstext));
 
 		//Verbindung aufbauen und an Handle übergeben
 		$ch = curl_init();

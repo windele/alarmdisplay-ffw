@@ -446,14 +446,14 @@ if ($einsatzgrund != "") {
 			$text .= "---------------------------------------------------\n";
 			$text .= "ERGÄNZUNGEN:\n";
 			$text .= "---------------------------------------------------\n";
-			$text .= "Zeitstempel Faxeingang: " . strftime("%A, %d.%m.%Y // %H:%M") . "\n";
+			$text .= "Zeitstempel Faxeingang: " . strftime("%A, %d.%m.%Y // %H:%M") . "\n\n";
 
 			// Link auf Google Maps und Navigationssoftware, falls wir nicht auf der Autobahn sind.
 			if (substr($strasse, 0, 3) != "A92") {
 				$text .= "Karte: \n";
-				$text .= "http://maps.google.de/maps?q=" . rawurlencode(str_replace(" ", "+", trim($strasse)) . "+" . str_replace(" ", "+", trim($hausnr)) . "," . str_replace(" ", "+", trim($ort))) . "\n";
+				$text .= "http://maps.google.de/maps?q=" . rawurlencode(str_replace(" ", "+", trim($strasse)) . "+" . str_replace(" ", "+", trim($hausnr)) . "," . str_replace(" ", "+", trim($ort))) . "\n\n";
 				$text .= "Google-Maps-Navigation: \n";
-				$text .= "http://maps.google.de/maps?daddr=" . rawurlencode(str_replace(" ", "+", trim($strasse)) . "+" . str_replace(" ", "+", trim($hausnr)) . "," . str_replace(" ", "+", trim($ort))) . "\n";
+				$text .= "http://maps.google.de/maps?daddr=" . rawurlencode(str_replace(" ", "+", trim($strasse)) . "+" . str_replace(" ", "+", trim($hausnr)) . "," . str_replace(" ", "+", trim($ort))) . "\n\n";
 				$text .= "Handy-Navigation für Telekom-Smartphones: \n";
 				$text .= "navigon://address/Einsatzstelle/DEU/" . str_replace("%26%26", "/", rawurlencode(str_replace(" ", "&&", trim($ort)))) . "/" . rawurlencode(trim($strasse)) . "/" . rawurlencode(trim($hausnr)) . "\n";
 			}

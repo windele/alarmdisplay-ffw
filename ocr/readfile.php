@@ -451,9 +451,9 @@ if ($einsatzgrund != "") {
 			// Link auf Google Maps und Navigationssoftware, falls wir nicht auf der Autobahn sind.
 			if (substr($strasse, 0, 3) != "A92") {
 				$text .= "Karte: \n";
-				$text .= "http://maps.google.de/maps?q=" . rawurlencode(str_replace(" ", "+", trim($strasse)) . "+" . str_replace(" ", "+", trim($hausnr)) . "," . str_replace(" ", "+", trim($ort))) . "\n\n";
+				$text .= "http://maps.google.de/maps?q=" . urlencode(trim($strasse) . " " . trim($hausnr) . ", " . trim($ort)) . "\n\n";
 				$text .= "Google-Maps-Navigation: \n";
-				$text .= "http://maps.google.de/maps?daddr=" . rawurlencode(str_replace(" ", "+", trim($strasse)) . "+" . str_replace(" ", "+", trim($hausnr)) . "," . str_replace(" ", "+", trim($ort))) . "\n\n";
+				$text .= "http://maps.google.de/maps?daddr=" . urlencode(trim($strasse) . " " . trim($hausnr) . ", " . trim($ort)) . "\n\n";
 				$text .= "Handy-Navigation für Telekom-Smartphones: \n";
 				$text .= "navigon://address/Einsatzstelle/DEU/" . str_replace("%26%26", "/", rawurlencode(str_replace(" ", "&&", trim($ort)))) . "/" . rawurlencode(trim($strasse)) . "/" . rawurlencode(trim($hausnr)) . "\n";
 			}

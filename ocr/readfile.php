@@ -4,8 +4,8 @@
  ALARMDISPLAY FEUERWEHR PIFLAS
  Copyright 2012-2014 Stefan Windele
 
- Version 1.0.0
-
+ Version 1.0.1
+ 
  Dieses Script liest die von der Texterkennung übergebene Textdatei ein,
  zerlegt die Struktur und speichert diese in die Datenbank.
  Als Texterkennung wurde die Software Cuneiform verwendet.
@@ -26,6 +26,9 @@
  Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
 
  */
+
+// Einstellungen für Zeichensatz
+setlocale(LC_ALL, 'de_DE');
 
 // Konfigurationsdatei einbinden
 require "../config.inc.php";

@@ -8,7 +8,7 @@ Diese Software kann bei Feuerwehren dazu verwendet werden, die Informationen des
 
 - **Hinweistexte**: Das Alarmdisplay kann als digitales Schwarzes Brett genutzt werden. Es können bis zu fünf Hinweistexte hinterlegt werden, die abwechselnd den Bildschirm füllen. Jeder Hinweistext kann mit einem Start- und Ende-Datum versehen werden, was eine automatische Anzeige ermöglicht.
 
-- **Einsatzvisualisierung und Einsatzkräfteinfo**: Im Alarmfall zeigt das Alarmdisplay die Einsatzdaten aus dem Alarmfax an. Zusätzlich wird der Einsatzort und die Anfahrt dorthin auf einer Karte visualisiert. Ein Versand der Daten per E-Mail an die Einsatzkräfte, der Versand einer SMS (kostenpflichtig über den Partner [RettAlarm](http://www.rettalarm.de) oder der Ausdruck einer Anfahrtsroutenbeschreibung sind ebenfalls Teil des Programms.
+- **Einsatzvisualisierung und Einsatzkräfteinfo**: Im Alarmfall zeigt das Alarmdisplay die Einsatzdaten aus dem Alarmfax an. Zusätzlich wird der Einsatzort und die Anfahrt dorthin auf einer Karte visualisiert. Ein Versand der Daten per E-Mail an die Einsatzkräfte, der Versand einer SMS (kostenpflichtig über den Dienstleister [RettAlarm](http://www.rettalarm.de) oder der Ausdruck einer Anfahrtsroutenbeschreibung sind ebenfalls Teil des Programms.
 
 - **Administrationsmenü**: Fast alle Parameter der Software können über ein Administrationsmenü eingestellt werden.
 

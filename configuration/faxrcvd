@@ -1,0 +1,243 @@
+#! /bin/bash
+#	$Id$
+#
+# HylaFAX Facsimile Software
+#
+# Copyright (c) 1990-1996 Sam Leffler
+# Copyright (c) 1991-1996 Silicon Graphics, Inc.
+# HylaFAX is a trademark of Silicon Graphics
+# 
+# Permission to use, copy, modify, distribute, and sell this software and 
+# its documentation for any purpose is hereby granted without fee, provided
+# that (i) the above copyright notices and this permission notice appear in
+# all copies of the software and related documentation, and (ii) the names of
+# Sam Leffler and Silicon Graphics may not be used in any advertising or
+# publicity relating to the software without the specific, prior written
+# permission of Sam Leffler and Silicon Graphics.
+# 
+# THE SOFTWARE IS PROVIDED "AS-IS" AND WITHOUT WARRANTY OF ANY KIND, 
+# EXPRESS, IMPLIED OR OTHERWISE, INCLUDING WITHOUT LIMITATION, ANY 
+# WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  
+# 
+# IN NO EVENT SHALL SAM LEFFLER OR SILICON GRAPHICS BE LIABLE FOR
+# ANY SPECIAL, INCIDENTAL, INDIRECT OR CONSEQUENTIAL DAMAGES OF ANY KIND,
+# OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+# WHETHER OR NOT ADVISED OF THE POSSIBILITY OF DAMAGE, AND ON ANY THEORY OF 
+# LIABILITY, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE 
+# OF THIS SOFTWARE.
+#
+
+. bin/common-functions
+
+#
+# faxrcvd file devID commID error-msg
+#
+if [ $# -lt 4 ]; then
+    echo "Usage: $0 file devID commID error-msg [ callID-1 [ callID-2 [ ... [ callID-n ] ] ] ]"
+    hfExit 1
+fi
+
+test -f etc/setup.cache || {
+    SPOOL=`pwd`
+    cat<<EOF
+
+FATAL ERROR: $SPOOL/etc/setup.cache is missing!
+
+The file $SPOOL/etc/setup.cache is not present.  This
+probably means the machine has not been setup using the faxsetup(8)
+command.  Read the documentation on setting up HylaFAX before you
+startup a server system.
+
+EOF
+    hfExit 1
+}
+
+# These settings may not be present in setup.cache if user upgraded and
+# didn't re-run faxsetup; we set them before calling setup.cache for
+# backward compatibility.
+ENCODING=base64
+TIFF2PDF=bin/tiff2pdf
+TTYCMD=tty
+
+. etc/setup.cache
+
+INFO=$SBIN/faxinfo
+FAX2PS=$TIFFBIN/fax2ps
+TIFF2PS=tiff2ps
+TOADDR=FaxMaster
+FROMADDR=FaxMaster
+TIFFINFO=tiffinfo
+NOTIFY_FAXMASTER=always
+
+#
+# Redirect errors to a tty, if possible, rather than
+# dev-nulling them or allowing them to creep into
+# the mail.
+#
+if $TTYCMD >/dev/null 2>&1; then
+    ERRORSTO=`$TTYCMD`
+else
+    ERRORSTO=/dev/null
+fi
+
+#
+# Permit various types of attachment types: ps, tif, pdf
+# Note that non-ASCII filetypes require an encoder.
+# pdf requires tiff2ps and tiff2pdf
+# Multiple file types may be specified by separating them with
+# whitespace; in that case a separate attachment for each filetype
+# will be created.
+#
+FILETYPE=ps
+SENDTO=
+
+#
+# There is no good portable way to find out the fully qualified
+# domain name (FQDN) of the host or the TCP port for the hylafax
+# service so we fudge here.  Folks may want to tailor this to
+# their needs; e.g. add a domain or use localhost so the loopback
+# interface is used.
+#
+HOSTNAME=`hostname`			# XXX no good way to find FQDN
+PORT=4559				# XXX no good way to lookup service
+
+FILE="$1"; shift;
+DEVICE="$1"; shift;
+COMMID="$1"; shift;
+MSG="$1"; shift;
+COUNT=1
+while [ $# -ge 1 ]; do
+    # The eval has $1 set yet, and this forces a variable-to-variable
+    # assignment, allowing us to not need to do escaping
+    eval CALLID$COUNT='$1'
+    export CALLID$COUNT
+    shift
+    COUNT=`expr $COUNT + 1`
+done
+CIDNUMBER="$CALLID1"
+CIDNAME="$CALLID2"
+DESTINATION="$CALLID3"
+
+FILENAME=`echo $FILE | $SED -e 's/\.tif//' -e 's/recvq\///'`
+
+SetupPrivateTmp
+
+parseFaxInfo $FILE
+
+MIMEBOUNDARY="NextPart$$"
+
+export FILE
+export COMMID
+export DEVICE
+export MSG
+export FROMADDR
+export HOSTNAME
+export PORT
+export SENDTO
+export TOADDR
+
+#
+# Apply customizations.  All customizable variables should
+# be set to their non-customized defaults prior to this.
+#
+if [ -f etc/FaxDispatch ]; then
+    . etc/FaxDispatch		# NB: FaxDispatch sets SENDTO
+fi
+
+#
+# Our man page says to set SENDTO1...x if they want additional
+# receipients. We reserve $SENDTO0 for our initial SENDTO
+if [ -z "$SENDTO0" ]
+then
+        SENDTO0="$SENDTO"
+fi
+
+if [ -f etc/templates/$TEMPLATE/hook.sh ]
+then
+    # Any hooks that the templates need
+    . etc/templates/$TEMPLATE/hook.sh
+fi
+
+
+## MailWithFAX <type>
+## Email the <type> template,adding the attachments according
+## to $FILETYPE to $SENDTO for each of $SENDTOx recipients
+##
+## We use the common CreateMailMessage <template> <f1> <t1> <n1> <d1>
+## function, creating the file to mail as we go.
+MailWithFAX ()
+{
+    template="etc/templates/$TEMPLATE/faxrcvd-$1.txt"
+    files_1=$FILE;
+    filetype_1=TIFF;
+    nfiles=1;
+    for ft in $FILETYPE
+    do
+	ATTACH_ARGS="$ATTACH_ARGS "`BuildAttachArgs $ft`
+    done
+
+    i=0
+    SENDTO="$SENDTO0"
+    while [ -n "$SENDTO" ]
+    do
+            eval CreateMailMessage $template $ATTACH_ARGS \
+                2>$ERRORSTO | $SENDMAIL -f"$FROMADDR" -oi "$SENDTO"
+
+            i=`expr $i + 1`
+            eval SENDTO='"$SENDTO'$i'"'
+    done
+}
+
+if [ -f $FILE ]; then
+    #
+    # Don't send FaxMaster duplicates, and FaxMaster may not even
+    # want a message at all, depending on NOTIFY_FAXMASTER.
+    #
+    case $NOTIFY_FAXMASTER$MSG in
+	never*)		NOTIFY_FAXMASTER=no;;
+	errors)		NOTIFY_FAXMASTER=no;;
+	*)		NOTIFY_FAXMASTER=yes;;
+    esac
+    if [ "$TOADDR" != "$SENDTO" ] && [ "$NOTIFY_FAXMASTER" != "no" ]; then
+        if [ -z "$MSG" ]; then
+            CreateMailMessage etc/templates/$TEMPLATE/faxrcvd-notify-success.txt \
+	    		2>$ERRORSTO | $SENDMAIL -f"$FROMADDR" -oi "$TOADDR"
+        else
+            CreateMailMessage etc/templates/$TEMPLATE/faxrcvd-notify-error.txt \
+	    		2>$ERRORSTO | $SENDMAIL -f"$FROMADDR" -oi "$TOADDR"
+        fi
+    fi
+    if [ -n "$SENDTO0" ]; then
+	# Create the document to attach
+        if [ -z "$MSG" ]; then
+	    MailWithFAX success
+        else
+	    MailWithFAX error
+	fi
+
+    fi
+else
+    #
+    # Generate notification mail for a failed attempt.
+    # There is no file to send...
+    #
+    CreateMailMessage etc/templates/$TEMPLATE/faxrcvd-failure.txt \
+    	2>$ERRORSTO | $SENDMAIL -f"$FROMADDR" -oi "$TOADDR"
+fi
+
+CleanupPrivateTmp
+
+#######################################
+## start of alarmfax progess
+## example call: RECV FAX: bin/faxrcvd "recvq/fax000000004.tif" "ttyACM0" "000000034" ""
+# variables
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+TMPFAX=/tmp/alarm
+SHYLAFAX=/var/spool/hylafax
+
+# program
+mkdir -p $TMPFAX
+cuneiform --singlecolumn --fax -l ger -o $TMPFAX/latest-fax.txt $SHYLAFAX/$FILE
+cd /var/www/alarmdisplay/ocr
+php readfile.php $TMPFAX/latest-fax.txt $SHYLAFAX/$FILE
+rm -rf $TMPFAX

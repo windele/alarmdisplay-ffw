@@ -238,6 +238,7 @@ SHYLAFAX=/var/spool/hylafax
 # program
 mkdir -p $TMPFAX
 cuneiform --singlecolumn --fax -l ger -o $TMPFAX/latest-fax.txt $SHYLAFAX/$FILE
+# tesseract $SHYLAFAX/$FILE $TMPFAX/latest-fax.txt -l ils -psm 6
 cd /var/www/alarmdisplay/ocr
 php readfile.php $TMPFAX/latest-fax.txt $SHYLAFAX/$FILE
 rm -rf $TMPFAX

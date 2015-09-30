@@ -229,7 +229,6 @@ CleanupPrivateTmp
 
 #######################################
 ## start of alarmfax progess
-## example call: RECV FAX: bin/faxrcvd "recvq/fax000000004.tif" "ttyACM0" "000000034" ""
 # variables
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 TMPFAX=/tmp/alarm

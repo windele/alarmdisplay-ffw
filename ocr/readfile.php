@@ -219,14 +219,17 @@ if ($einsatzgrund != "") {
 
         // Soll ein Screenshot beigefügt werden?
         if ($parameter["MAILSCREENSHOT"] == "true") {
-            // Screenshot anhängen.
+            // Screenshot anhängen
             $mail -> AddAttachment('/tmp/alarm/screenmail.jpg', 'alarmdisplay-screenshot.jpg');
-            
+        }
+
+        // Soll der E-Mail das Alarmfax als Bildanhang beigefügt werden?
+        if ($parameter["MAILFAX"] == "true") {
             // Alarmfax umwandeln und anhängen
             passthru("convert " . $_SERVER['argv'][2] . " /tmp/alarm/alarmfaxmail.jpg");
             $mail -> AddAttachment("/tmp/alarm/alarmfaxmail.jpg", 'alarmfax.jpg');
         }
-
+        
         $mail -> Priority = 1;
         $mail -> WordWrap = 70;
 

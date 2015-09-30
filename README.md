@@ -232,8 +232,6 @@ Zeilen:
 ```bash
 #######################################
 ## start of alarmfax progess
-## example call: RECV FAX: bin/faxrcvd "recvq/fax000000001.tif" "ttyACM0" 
-## "000000001" ""
 # variables
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 TMPFAX=/tmp/alarm
@@ -312,6 +310,13 @@ grundsätzlich Faxe richtig annimmt.
   der eigenen Feuerwehr über der Einsatzanzeige rot auf. Wenn Sie die 
   angegebenen Fahrzeuge ändern wollen, nehmen Sie die Änderung in der 
   `modules/mod_einsatz.php` vor.
+- **Reguläre Ausdrücke:** in der Datei `ocr/readfile.php` werden in den Zeilen 
+  69 bis 100 durch Reguläre Ausdrücke Informationen wie Mitteiler, Straße und 
+  Hausnummer gesammelt. Diese Ausdrucke müssen an das Alarmfax der Örtlichen 
+  Rettungsleitstelle angepasst werden. Da die Informationen aus einem OCR 
+  Vorgang stammen müssen mit Fehler gerechnet werden, dass zum Beispiel statt 
+  einem `ö` ein `o` erkannt wird. Dies sollte bei dem Entwerfen der Regulären 
+  Ausdrücke beachtet werden.
 
 
 ## Tipps und Tricks

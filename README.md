@@ -278,15 +278,18 @@ Die Erfahrung zeigt, dass das Faxen eines bestehenden Papierfaxes an das
 Display auch in feinster Auflösung nicht zur gewünschten Texterkennungsrate 
 führt, um ausreichende Tests durchzuführen. Deswegen können Sie zum Testen der 
 Anzeige das Empfangen des Faxes überspringen und Testdaten händisch in die 
-Datenbank einspielen. Hierzu können Sie die enthaltene Textdatei 
-`configuration/testfax.txt`nutzen. Auf der Konsole können Sie mit 
+Datenbank einspielen. Hierzu können Sie die in diesem Repository enthaltene 
+Alarmfax `configuration/testfax.tif` nutzen. Auf der Konsole können Sie mit 
 
-`/usr/bin/php /var/www/alarmdisplay/ocr/readfile.php 
-/var/www/alarmdisplay/configuration/testfax.txt`
+```bash
+/var/spool/hylafax/bin/faxrcvd \
+  "configuration/testfax.tif" \
+  "ttyACM0" \
+  "000000001"
+```
 
 die Daten per Hand einspielen. Dieser Befehl simuliert die Übergabe des 
-umgewandelten Alarmfax an die Einleseroutine. Durch ändern der Testdatei können 
-Sie mehrere Testszenarien abdecken.
+umgewandelten Alarmfax an die Einleseroutine. 
 **Achtung:** Prüfen Sie trotzdem vorab durch Testfaxe, ob Ihr Faxserver 
 grundsätzlich Faxe richtig annimmt.
 

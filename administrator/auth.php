@@ -8,5 +8,3 @@
       header('Location: http://'.$hostname.($path == '/' ? '' : $path).'/login.php');
       exit;
       }
-?>
-

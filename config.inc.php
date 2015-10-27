@@ -32,5 +32,3 @@ define("DBNAME", "alarmdisplay");	// Datenbankname
 define("DBUSER", "benutzer");		// Datenbank-Benutzer - "root" für den Admin
 define("DBPASS", "meinpasswort");	// Datenbank-Passwort
 
-
-?>

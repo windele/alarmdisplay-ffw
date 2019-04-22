@@ -1,4 +1,4 @@
-#Update April 2019: Aktuell wird die Software überarbeitet, um den BayernAtlas mit einzubinden und eine Version zu erstellen, die mit der FritzBox als Faxgerät zusammenarbeitet.
+# Update April 2019: Aktuell wird die Software überarbeitet, um den BayernAtlas mit einzubinden und eine Version zu erstellen, die mit der FritzBox als Faxgerät zusammenarbeitet.
 
 # Allgemeines
 ## Nutzen der Software

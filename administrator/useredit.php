@@ -2,9 +2,9 @@
 
 /*
 ALARMDISPLAY FEUERWEHR PIFLAS
-Copyright 2012 Stefan Windele
+Copyright 2012-2019 Stefan Windele
 
-Version 1.0
+Version 2.0
 
 Dieses Script ist für die Verwaltung der in der Datenbank gespeicherten E-Mail und SMS-Empfänger zuständig.
 
@@ -120,8 +120,9 @@ $opts['cgi']['prefix']['data']      = 'PME_data_';
 /* Get the user's default language and use it if possible or you can
    specify particular one you want to use. Refer to official documentation
    for list of available languages. */
-$opts['language'] = $_SERVER['HTTP_ACCEPT_LANGUAGE'] . '-UTF8';
+// $opts['language'] = $_SERVER['HTTP_ACCEPT_LANGUAGE'] . '-UTF8';
 
+$opts['language'] = 'DE-UTF8';
 
 $opts['fdd']['id'] = array(
   'name'     => 'ID',

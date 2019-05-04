@@ -2,9 +2,9 @@
 
 /*
 ALARMDISPLAY FEUERWEHR PIFLAS
-Copyright 2012 Stefan Windele
+Copyright 2012-2019 Stefan Windele
 
-Version 1.0.0
+Version 2.0.0
 
 Dieses Script stellt das Modul zur Anzeige der Hinweistexte dar.
 

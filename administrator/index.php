@@ -2,9 +2,9 @@
 
 /*
 ALARMDISPLAY FEUERWEHR PIFLAS
-Copyright 2012 Stefan Windele
+Copyright 2012-2019 Stefan Windele
 
-Version 0.1.1
+Version 2.0.0
 
 Dieses Script liest die von der Texterkennung übergebene Textdatei ein, 
 zerlegt die Struktur und speichert diese in die Datenbank.
@@ -180,7 +180,7 @@ echo "<div id='tabs'>\n\n<ul>";
 
 
 // Abruf aus der Datenbank, wie die Tabs heissen.
-$tabs = $db->query("SELECT tab, title FROM tbl_adm_params WHERE (acc=0 AND line=0) GROUP BY tab");
+$tabs = $db->query("SELECT tab, title FROM tbl_adm_params WHERE (acc=0 AND line=0) GROUP BY tab, title");
 
 // Schreiben der Tabinfos
 while ($row = $tabs->fetch_row())
@@ -192,7 +192,7 @@ while ($row = $tabs->fetch_row())
 echo "</ul>\n\n";
 
 // Nochmals Abruf aus der Datenbank, wie die Tabs heissen inkl. Beschreibung.
-$tabs = $db->query("SELECT tab, title, beschreibung FROM tbl_adm_params WHERE (acc=0 AND line=0) GROUP BY tab");
+$tabs = $db->query("SELECT tab, title, beschreibung FROM tbl_adm_params WHERE (acc=0 AND line=0) GROUP BY tab, title, beschreibung");
 
 // Wir basteln die Inhalte der Tabs.
 while ($row = $tabs->fetch_row())

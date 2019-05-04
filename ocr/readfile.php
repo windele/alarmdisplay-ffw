@@ -2,15 +2,12 @@
 
 /*
  ALARMDISPLAY FEUERWEHR PIFLAS
- Copyright 2012-2014 Stefan Windele
+ Copyright 2012-2019 Stefan Windele
 
- Version 1.0.1
+ Version 2.0.0
  
  Dieses Script liest die von der Texterkennung übergebene Textdatei ein,
- zerlegt die Struktur und speichert diese in die Datenbank.
- Als Texterkennung wurde die Software Cuneiform verwendet.
- Wenn eine andere Texterkennung eingesetzt wird, so ist das Programm
- entsprechend anzupassen.
+ findet die relevanten Wörter und speichert diese in die Datenbank.
 
  Dieses Programm ist Freie Software: Sie können es unter den Bedingungen
  der GNU General Public License, wie von der Free Software Foundation,
@@ -33,6 +30,11 @@ setlocale(LC_ALL, 'de_DE');
 // Konfigurationsdatei einbinden
 require "../config.inc.php";
 
+// Einstellungen für den Mailversand
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 // Reset der Variablen
 $alarmzeit = "";
 $zeile_zerlegt = array();
@@ -45,7 +47,8 @@ $objekt = "";
 $station = "";
 $einsatzgrund = "";
 $prio = 0;
-$beginndispoliste = 0;
+$rw = 0;
+$hw = 0;
 $bemerkung = "";
 $dispoliste = array();
 
@@ -57,18 +60,18 @@ if (isset($_GET['debug'])) {
         die ;
     };
 }
-$faxlaenge = count($alarmfax);
 
-//Hilfsfunktion zum Zerlegen der Zeilen
-function zeile_zerlegen($n) {
-    global $zeile_zerlegt, $alarmfax;
-    $zeile_zerlegt = explode(":", $alarmfax[$n]);
-}
+
+//ungeliebte Abkürzungen definieren zwecks Ersetzen
+	   $loeschungen = array();
+	   $loeschungen[0] = '/FL\\s/i';
+	   $loeschungen[1] = '/LA\\W\\w\\s/i';
+	   $loeschungen[2] = '/\\d\\.\\d\\.*\\d*\\s/i';
 
 // Erkennung des Alarmfax
-if (preg_match("/Absender[^I]*ILS.Donau.Iller/i", $alarmfax)) {
+if (preg_match("/Absender[^I]*ILS.Landshut/i", $alarmfax)) {
     // Mitteiler
-    if (preg_match("/Name\\W+(.*)\\W+Rufnummer/i", $alarmfax, $treffer)) {
+    if (preg_match("/Name\\W+(.*)/i", $alarmfax, $treffer)) {
         $mitteiler = trim($treffer[1]);
     }
     // Straße und Hausnummer
@@ -80,23 +83,51 @@ if (preg_match("/Absender[^I]*ILS.Donau.Iller/i", $alarmfax)) {
     if (preg_match("/Ort[\\W:]*([0-9]{5})\\W*([\\wüöäß-]*)/i", $alarmfax, $treffer)) {
         $ort = trim($treffer[1]) . " " . trim($treffer[2]);
     }
+
+    // Objekt
+    if (preg_match("/Objekt\\W*(.*)\nEPN/i", $alarmfax, $treffer)) 
+	{
+        $objekt = trim(preg_replace($loeschungen, ' ', $treffer[1]));
+	}
+
     // Einsatzgrund
     if (preg_match("/Schlagw\\W*(.*)/i", $alarmfax, $treffer)) {
         $einsatzgrund = trim($treffer[1]);
         if (preg_match("/Stichwort.B[^\\w\\n]*(.*)/i", $alarmfax, $treffer)) {
             $einsatzgrund .= " " . trim($treffer[1]);
         }
+	// Hashtags entfernen
+	$einsatzgrund = str_replace ("#", " ", $einsatzgrund);
+
+
+	
     }
     // Bemerkung
-    if (preg_match("/\\W*BEMERKUNG\\W*\\n(?s)(.*)/im", $alarmfax, $treffer)) {
+    if (preg_match("/\\W*BEMERKUNG\\W*\\n(?s)(.*)\\n.*DISPO/im", $alarmfax, $treffer)) {
         $bemerkung = trim($treffer[1]);
     }
+    // Koordinate Rechtswert
+    if (preg_match("/Rechtswert\\W+(.*)/i", $alarmfax, $treffer)) {
+        $rw = trim($treffer[1]);
+    }
+
+    // Koordinate Hochwert
+    if (preg_match("/Hochwert\\W+(.*)/i", $alarmfax, $treffer)) {
+        $hw = trim($treffer[1]);
+
+    }
+    
     // Einsatzmittel
-    if (preg_match_all("/Name\\W+[0-9.]+\\W+\\w+\\W+\\w+\\W+([^0-9\\n]+)([0-9\\/]*)/i", $alarmfax, $treffer)) {
-        for ($i = 0; $i < count($treffer[0]); $i++) {
-            $dispoliste[] = trim($treffer[1][$i]) . " " . trim($treffer[2][$i]);
+   
+    if (preg_match_all("/Name\s\S\s(.*)/im", $alarmfax, $treffer)) {
+
+        for ($i = 0; $i < count($treffer[0]); $i++) 
+	{
+	   $dispoliste[] =  htmlentities(trim(preg_replace($loeschungen, ' ', $treffer[1][$i])));
         }
     }
+	
+
 }
 
 
@@ -105,42 +136,36 @@ echo "Mitteiler: " . $mitteiler . "\n";
 echo "Strasse: " . $strasse . "\n";
 echo "Haus-Nr: " . $hausnr . "\n";
 echo "Ort: " . $ort . "\n";
+echo "Objekt: " . $objekt . "\n";
 echo "Einsatzgrund: " . $einsatzgrund . "\n";
 echo "Prio: " . $prio . "\n";
+echo "Rechtswert: " . $rw . "\n";
+echo "Hochwert: " . $hw . "\n";
 echo "Bemerkung: " . $bemerkung . "\n";
-// echo "Beginn der Dispoliste in Zeile: " . $beginndispoliste . "\n";
 for ($i = 0; $i < count($dispoliste); $i++) {
     echo "Dispo " . $i . ": " . $dispoliste[$i] . "\n";
 }
 
-/* Variablen für SQL
+echo "Alarm: " . trim($einsatzgrund); 
 
- $mitteiler
- $strasse
- $hausnr
- $ort
- $einsatzgrund
- $prio
- $bemerkung
- TIMESTAMP
- $dispoliste
 
- */
 
 // Verbindung zur Datenbank herstellen und an Handle $db übergeben
 $db = mysqli_connect(DBHOST, DBUSER, DBPASS, DBNAME) or die('Verbindung zur Datenbank fehlgeschlagen.');
 $db -> set_charset("utf8");
 
 // SQL-Abfrage zusammensetzen
-$sqlinsert = "INSERT INTO tbl_einsaetze (`mitteiler`, `strasse`, `hausnr`, `ort`, `objekt`, `station`, `schlagw`, `prio`, `bemerkung`, `dispo`) VALUES ('" . $mitteiler . "', '" . $strasse . "', '" . $hausnr . "', '" . $ort . "', '" . $objekt . "', '" . $station . "', '" . $einsatzgrund . "', '" . $prio . "', '" . $bemerkung . "', '" . json_encode($dispoliste) . "')";
+$sqlinsert = "INSERT INTO tbl_einsaetze (`mitteiler`, `strasse`, `hausnr`, `ort`, `objekt`, `station`, `schlagw`, `prio`, `bemerkung`, `dispo`, `rw`, `hw`) VALUES ('" . $mitteiler . "', '" . $strasse . "', '" . $hausnr . "', '" . $ort . "', '" . $objekt . "', '" . $station . "', '" . $einsatzgrund . "', '" . $prio . "', '" . $bemerkung . "', '" . json_encode($dispoliste)  . "', '" . $rw . "', '" . $hw . "')";
+
+echo "SQL: " . $sqlinsert . "\n";
 
 // Wir prüfen, ob auch ein Fax von der ILS erkannt wurde. Nur dann wird die Aktion ausgelöst.
 if ($einsatzgrund != "") {
 
     $db -> query($sqlinsert);
 
-    // Weils so schön ist, sollten wir den Bildschirm einschalten; wir nehmen das Alarmskript das den Browser aufmacht.
-    // passthru(__DIR__ . "/../administrator/bild-an-alarm.sh");
+    // Weils so schön ist, sollten wir den Bildschirm einschalten
+    // passthru(__DIR__ . "/../administrator/bild-an.sh");
 
     // Setzen der Umgebung
     setlocale(LC_ALL, 'de_DE.utf8');
@@ -163,9 +188,9 @@ if ($einsatzgrund != "") {
         $smstext= substr($smstext, 0, 159);
         
         //URL zusammenbauen
-        $url = 'http://www.RA-Server.de/webin.php?log_user=';
-        $url .= urlencode($parameter["SMSUSER"]) . '&log_pass=';
-        $url .= urlencode($parameter["SMSPASS"]) . '&listcode=';
+        $url = 'https://www.groupalarm.de/webin.php?log_user='; 
+        $url .= urlencode($parameter["SMSUSER"]) . '&log_epass=';
+        $url .= urlencode($parameter["SMSPASS"]) . '&xlistcode=';
         $url .= urlencode($parameter["SMSALARMGRUPPEN"]);
 
         if ($parameter["SMSFLASH"] == "true") {
@@ -182,6 +207,7 @@ if ($einsatzgrund != "") {
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, '3');
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         //Abfrage ausführen
         $result = curl_exec($ch);
@@ -192,20 +218,21 @@ if ($einsatzgrund != "") {
 
     }
 
-    // Prüfen, ob ein Screenshot gebraucht wird - wenn ja, erstellen wir einen
-    if ($parameter["DRUCKENSCREEN"] == "true" || $parameter["MAILSCREENSHOT"] == "true") {
-        putenv("DISPLAY=:0");
-        passthru("wkhtmltoimage --height 1280 --width 1920 --javascript-delay 12500 --quality 100 http://localhost/alarmdisplay /tmp/alarm/screenshot.jpg");
-        passthru("convert /tmp/alarm/screenshot.jpg -resize 50% /tmp/alarm/screenmail.jpg");
-    }
-
     // E-Mail-Funktion
     if ($parameter["MAILENABLED"] == "true") {
 
         // lasst uns eine Mail schicken
-        require ('class.phpmailer.php');
+
+	// Klassen laden
+
+	require 'Exception.php';
+	require 'PHPMailer.php';
+	require 'SMTP.php';
+
+	
         $mail = new PHPMailer();
         $mail -> IsSMTP();
+        //$mail -> CharSet = 'utf-8';  
         $mail -> Host = $parameter["SMTPSERVER"];
         $mail -> SMTPAuth = true;
         $mail -> Port = $parameter["SMTPPORT"];
@@ -215,21 +242,7 @@ if ($einsatzgrund != "") {
         $mail -> From = $parameter["SMTPSENDERMAIL"];
         $mail -> FromName = $parameter["SMTPSENDER"];
         $mail -> AddAddress($parameter["SMTPSENDERMAIL"]);
-        $mail -> Subject = "Alarm: " . utf8_decode(trim($einsatzgrund));
-
-        // Soll ein Screenshot beigefügt werden?
-        if ($parameter["MAILSCREENSHOT"] == "true") {
-            // Screenshot anhängen
-            $mail -> AddAttachment('/tmp/alarm/screenmail.jpg', 'alarmdisplay-screenshot.jpg');
-        }
-
-        // Soll der E-Mail das Alarmfax als Bildanhang beigefügt werden?
-        if ($parameter["MAILFAX"] == "true") {
-            // Alarmfax umwandeln und anhängen
-            passthru("convert " . $_SERVER['argv'][2] . " /tmp/alarm/alarmfaxmail.jpg");
-            $mail -> AddAttachment("/tmp/alarm/alarmfaxmail.jpg", 'alarmfax.jpg');
-        }
-        
+        $mail -> Subject = "Alarm: " . utf8_decode(trim($einsatzgrund)); 
         $mail -> Priority = 1;
         $mail -> WordWrap = 70;
 
@@ -267,6 +280,13 @@ if ($einsatzgrund != "") {
             foreach($dispoliste as $d) {
                     $text .= $d . "\n";
             }
+	    $text .= "---------------------------------------------------\n";
+            $text .= "KOORDINATEN:\n";
+            $text .= "---------------------------------------------------\n";	
+            $text .= "Rechtswert: " . $rw . "\n";
+            $text .= "Hochwert: " . $hw . "\n";
+            $text .= "---------------------------------------------------\n";
+            $text .= "Bayernatlas: https://geoportal.bayern.de/bayernatlas/?N=" . $hw . "&E=" . $rw ." &zoom=" . $parameter['MAPZOOMOBEN'] ."&lang=de&topic=ba&bgLayer=". $parameter['LAYERKARTEOBEN'] . "&crosshair=marker&catalogNodes=122\n";	
             $text .= "---------------------------------------------------\n";
             $text .= "ERGÄNZUNGEN:\n";
             $text .= "---------------------------------------------------\n";
@@ -292,6 +312,111 @@ if ($einsatzgrund != "") {
 
     }
 
+
+   // Externer Alarm: Divera
+    if ($parameter["DIVERAENABLED"] == "true") {
+
+	$ch = curl_init();
+
+	curl_setopt($ch, CURLOPT_URL, "www.divera247.com/api/alarm?accesskey=" . $parameter['DIVERAKEY']);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, "type=$einsatzgrund&address=$strasse $hausnr, $ort&text=$bemerkung");
+
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+	$server_output = curl_exec ($ch);
+
+	curl_close ($ch);
+
+   
+    }
+
+
+
+   // Externer Alarm: Prowl
+    if ($parameter["PROWLENABLED"] == "true") {
+		$api = $parameter["PROWLKEY"];
+		$title = "Alarm für die " . $parameter["NAMEFEUERWEHR"];
+
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL,"http://prowl.weks.net/publicapi/add");
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS,"apikey=$api&application=$title&priority=0&event=$einsatzgrund&description=Bemerkung: $bemerkung\n-------------------------------------------\nEinsatzort: $strasse $hausnr, $ort\n-------------------------------------------\n\nFaxeingang: " . strftime("%A, %d.%m.%Y // %H:%M") . "\nAlarmdisplay FF Piflas");
+
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		$server_output = curl_exec ($ch);
+
+		curl_close ($ch);
+
+		print_r($server_output);
+			  
+   
+    }
+
+
+   // Externer Alarm: Telegram
+    if ($parameter["TELEGRAMENABLED"] == "true") {
+		// Text für TELEGRAM
+		$text = "Alarm für die " . $parameter["NAMEFEUERWEHR"] . "\n";
+		$text .= "----------------------------------\n";
+		$text .= "EINSATZDATEN:\n";
+		$text .= "----------------------------------\n";
+		$text .= "Stichwort: \n" . $einsatzgrund . "\n";
+		$text .= "Einsatzort: \n" . $strasse . " " . $hausnr . ", " . $ort . "\n";
+		$text .= "Einsatzobjekt: \n" . $objekt . "\n";
+		$text .= "----------------------------------\n";
+		$text .= "BEMERKUNGEN:\n";
+		$text .= "----------------------------------\n";
+		$text .= "Bemerkung ILS: \n" . $bemerkung . "\n";
+		$text .= "Bemerkung Kdt: \n";
+		($parameter["EINSATZHINWEIS"] != "") ? $text .= $parameter["EINSATZHINWEIS"] . "\n" : $text .= "-keine-\n";
+		$text .= "----------------------------------\n";
+		$text .= "DISPONIERTE FAHRZEUGE:\n";
+		$text .= "----------------------------------\n";
+
+		for ($i = 0; $i < 50; $i++) {
+		if ($dispoliste[$i] != "")
+		$text .= $dispoliste[$i] . "\n";
+		}
+		$text .= "----------------------------------\n";
+		$text .= "ERGÄNZUNGEN:\n";
+		$text .= "----------------------------------\n";
+		$text .= "Zeitstempel Faxeingang: " . strftime("%A, %d.%m.%Y // %H:%M") . "\n\n";
+
+		// Link auf Google Maps und Navigationssoftware, falls wir nicht auf der Autobahn sind.
+		if (substr($strasse, 0, 3) != "A92") {
+		$text .= "Karte: \n";
+		$text .= "http://maps.google.de/maps?q=" . urlencode(trim($strasse) . " " . trim($hausnr) . ", " . trim($ort)) . "\n\n";
+		$text .= "Google-Maps-Navigation: \n";
+		$text .= "http://maps.google.de/maps?daddr=" . urlencode(trim($strasse) . " " . trim($hausnr) . ", " . trim($ort)) . "\n\n";
+		}
+		$text .= "----------------------------------\n";
+		$text .= "Automatisch generiert durch Alarmdisplay FF Piflas \n\n";
+		$text .= "-ENDE-\n";
+
+		// Übergabe an TELEGRAM
+
+		$botToken=$parameter["TELEGRAMBOTTOKEN"];
+		$website="https://api.telegram.org/bot".$botToken;
+		$chatId=$parameter["TELEGRAMCHATID"];  //Receiver Chat Id
+		$params=[
+		'chat_id'=>$chatId,
+		'text'=>$text,
+		];
+		$ch = curl_init($website . '/sendMessage');
+		curl_setopt($ch, CURLOPT_HEADER, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, ($params));
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		$result = curl_exec($ch);
+		curl_close($ch);
+   
+    }
+
+
     // Druckfunktion Fax
     if ($parameter["DRUCKENFAX"] == "true") {
         // Fax drucken
@@ -300,24 +425,33 @@ if ($einsatzgrund != "") {
         passthru("lp -o media=A4 -o fit-to-page /tmp/alarm/alarmfaxdruck.pdf");
     }
 
+
     // Druckfunktion Screenshot
     if ($parameter["DRUCKENSCREEN"] == "true") {
+
+ 	putenv("DISPLAY=:0");
+        passthru("wkhtmltoimage --height 1280 --width 1920 --javascript-delay 8500 --quality 100 http://localhost/alarmdisplay-ffw /tmp/screenshot.jpg");
+       
+
         $exemplare = intval($parameter["DRUCKENSCREENWIEOFT"]) - 1;
 
-        if ($parameter["DRUCKENANFAHRT"] == "true") {
-            $anfahrtskarte = "wkhtmltoimage --height 1280 --width 1920 --javascript-delay 12500 --quality 100 'http://localhost/alarmdisplay/modules/mod_einsatz_inc_route_zoom_panel.php' /tmp/alarm/anfahrt.jpg";
+ 
+            if ($parameter["DRUCKENANFAHRT"] == "true") {
+			$anfahrtskarte = "wkhtmltoimage --height 1280 --width 1920 --javascript-delay 8500 --quality 100 'http://localhost/alarmdisplay-ffw/modules/mod_einsatz_inc_route_zoom_panel.php' /tmp/anfahrt.jpg";
 
-            // Anfahrtskarte erstellen
-            putenv("DISPLAY=:0");
-            putenv("LANG=de_DE.UTF-8");
-            setlocale(LC_ALL, 'de_DE.UTF-8');
-            passthru($anfahrtskarte);
+			// Anfahrtskarte erstellen
+			putenv("DISPLAY=:0");
+			putenv("LANG=de_DE.UTF-8");
+			setlocale(LC_ALL, 'de_DE.UTF-8');
+			passthru($anfahrtskarte);
 
-            $befehl = "convert -border 40 -bordercolor white -append -density 300x300 -resize 2480x3506 -duplicate " . $exemplare . " /tmp/alarm/screenshot.jpg /tmp/alarm/anfahrt.jpg -gravity center /tmp/alarm/screenshot.pdf";
+			$befehl = "convert -border 40 -bordercolor white -page A4 -density 300x300 -resize 2480x3506 -append -duplicate " . $exemplare . " /tmp/screenshot.jpg /tmp/anfahrt.jpg /tmp/screenshot.pdf";
+		echo $befehl;
 
-        } else {
-            $befehl = "convert -border 40 -bordercolor white -density 300x300 -resize 2480x3506 -duplicate " . $exemplare . " /tmp/alarm/screenshot.jpg -gravity center /tmp/alarm/screenshot.pdf";
-        }
+		} else {
+			$befehl = "convert -border 40 -bordercolor white -page A4 -density 300x300 -resize 2480x3506 -duplicate " . $exemplare . " /tmp/screenshot.jpg /tmp/screenshot.pdf";
+		}
+ 
 
         // PDF erstellen
         passthru($befehl);
@@ -331,3 +465,5 @@ if ($einsatzgrund != "") {
 // Verbindung zur Datenbank schließen
 $db -> close();
 ?>
+
+

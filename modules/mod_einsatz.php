@@ -2,9 +2,9 @@
 
 /*
  ALARMDISPLAY FEUERWEHR PIFLAS
- Copyright 2012 Stefan Windele
+ Copyright 2012-2019 Stefan Windele
 
- Version 1.0.0
+ Version 2.0.0
 
  Dieses Script stellt das Einsatzfax auf dem Display dar.
 
@@ -49,7 +49,7 @@ $dispoliste = json_decode($row['dispo']);
 // Dispoliste prüfen, welche unserer Autos alarmiert wurden und Lampe rot schalten, Text blinken lassen
 for ($i = 0; $i < count($dispoliste); $i++) {
 	switch ($dispoliste[$i]) {
-		case "Piflas 62/1" :
+		case "Musterstadt 62/1" :
 			$fahrzeuge["RW"] = $parameter['FARBEALARM'] . $resthtmltag;
 			break;
 
@@ -65,7 +65,7 @@ for ($i = 0; $i < count($dispoliste); $i++) {
 			$fahrzeuge["MZF"] = $parameter['FARBEALARM'] . $resthtmltag;
 			break;
 
-		case "VSA FF Piflas" :
+		case "VSA FF Musterstadt" :
 			$fahrzeuge["VSA"] = $parameter['FARBEALARM'] . $resthtmltag;
 			$fahrzeuge["MZF"] = $parameter['FARBEALARM'] . $resthtmltag;
 			break;
@@ -91,17 +91,7 @@ for ($i = 0; $i < count($dispoliste); $i++) {
 </tr>
 </table>
 </div>
-
-<?php
-
-// Bei Autobahn brauchen wir keine Karte. Würde eh nicht funktionieren.
-if (substr($row[3], 0, 3) == "A92") {
-	echo "<div class='span-20 last'>";
-} else {
-	echo "<div class='span-10'>";
-}
-?>
-
+<div class='span-10'>
 <div class="error">
 <h1>
 <?php  // Schlagwort
@@ -184,13 +174,12 @@ echo implode(', ',$dispoliste);
 </div>
 
 <?php
-// Bei Autobahn brauchen wir keine Karte. Würde eh nicht funktionieren.
-if (substr($row[3], 0, 3) != "A92") {
+
 	echo "<div class='span-10 last'>";
-	echo "<iframe class='span-10' src='modules/mod_einsatz_inc_maps.php?strasse=" . urlencode($row[3]) . "&hausnr=" . $row[4] . "&ort=" . $row[5] . "'  height='500' name='Einsatzort' style='border:1px solid #777;'>Einsatzort</iframe>";
-	echo "<iframe class='span-10' src='modules/mod_einsatz_inc_route_zoom.php?strasse=" . urlencode($row[3]) . "&hausnr=" . $row[4] . "&ort=" . $row[5] . "' height='500' name='Route' style='border:1px solid #777;'>Route</iframe>";
+	echo "<iframe class='span-10' src='modules/mod_einsatz_inc_maps.php?rw=" . urlencode($row['rw']) . "&hw=" . $row['hw'] . "'  height='500' name='Einsatzort' style='border:1px solid #777;'>Einsatzort</iframe>";
+	echo "<iframe class='span-10' src='modules/mod_einsatz_inc_route_zoom.php?rw=" . urlencode($row['rw']) . "&hw=" . $row['hw'] . "' height='500' name='Route' style='border:1px solid #777;'>Route</iframe>";
 	echo "</div>";
-}
+
 ?>
 
 </div>

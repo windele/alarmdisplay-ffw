@@ -2,12 +2,14 @@
 
 /*
 ALARMDISPLAY FEUERWEHR PIFLAS
-Copyright 2012 Stefan Windele
+Copyright 2012-2019 Stefan Windele
 
-Version 1.0.0
+Version 2.0.0
 
-Dieses Skript stellt den Einsatzort im Detail auf einer Google-Maps-Karte dar. 
-Abhängig vom Ort werden verschiedene Zoom-Stufen verwendet.
+Dieses Script stell eine Übersichtskarte zum Einsatzort im BayernAtlas dar. 
+Das Ziel wird mit den von der Leitstelle übergebenen Koordinaten ermittelt.
+Kartenlayer und Zoomstufen sind über das Administrationsmenü einstellbar.
+Diese Karte wird im Alarmmodul oben eingeblendet.
 
 Dieses Programm ist Freie Software: Sie können es unter den Bedingungen 
 der GNU General Public License, wie von der Free Software Foundation,
@@ -53,74 +55,15 @@ $db->close();
 <style type="text/css">
   html { height: 100% }
   body { height: 100%; margin: 0px; padding: 0px }
-  #map_canvas { height: 100% }
+  
 </style>
-
-<script type="text/javascript"
-    src="https://maps.google.com/maps/api/js?sensor=false&region=DE">
-</script>
-
-
-<script type="text/javascript">
- var geocoder;
- var map;
- var latlng;
-
-  function initialize() {
-    geocoder = new google.maps.Geocoder();
-    var latlng = new google.maps.LatLng(48.55453, 12.162039999999934);
-    var myOptions = {
-      zoom: <?php  echo $parameter['MAPZOOMSTADT']; ?>,
-      center: latlng,
-      disableDefaultUI: true,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    }
-    map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-    codeAddress();
-    zoome(); 
-  }
-
-  function codeAddress() {
-    // ACHTUNG: Adresse muss UTF-8-codiert von PHP übergeben werden!!!! Sonst Umlaute kaputt.
-    var address = "<?php  echo $_GET['strasse']." ".$_GET['hausnr'].", ".$_GET['ort'] ?>";
-    geocoder.geocode( { 'address': address}, function(results, status) {
-      if (status == google.maps.GeocoderStatus.OK) {
-        map.setCenter(results[0].geometry.location);
-        var marker = new google.maps.Marker({
-            map: map, 
-            position: results[0].geometry.location
-        });
-      } else {
-        // alert("Geocode was not successful for the following reason: " + status);
-      }
-    });
-  }
-
-function zoome() 
-{ 
-	// Feststellen, ob wir noch in unserem Ortsgebiet sind
-	var ortaufkarte = document.getElementById("ortaufkarte").value;
-	var ergebnis = ortaufkarte.search(/<?php  echo $parameter['MAPUMFELD']; ?>/i);
-	var zoomlevel = <?php  echo $parameter['MAPZOOMSTADT']; ?>;
-	if (ergebnis != -1)
-	{
-		// Wir sind im Ortsgebiet
-		zoomlevel = <?php  echo $parameter['MAPZOOMSTADT']; ?>;
-	} else {
-		// Wir sind auf dem Land
-		zoomlevel = <?php  echo $parameter['MAPZOOMLAND']; ?>;
-	}
-	
-	map.setZoom(zoomlevel); 
-}
-
-</script>
 
 </head>
 
-<body onload="initialize()">
-  <input type="hidden" id="ortaufkarte" value="<?php  echo $_GET['ort']; ?>">
-  <div id="map_canvas" style="width:100%; height:100%"></div>
+<body>
+
+
+  <iframe src='https://geoportal.bayern.de/bayernatlas/embed.html?N=<?php echo $_GET['hw']."&E=".$_GET['rw'] ." &zoom=". $parameter['MAPZOOMOBEN'] ."&lang=de&topic=ba&bgLayer=". $parameter['LAYERKARTEOBEN'] ?>&crosshair=marker&catalogNodes=122' width='100%' height='100%' frameborder='0' style='border:0'></iframe>
 
 </body>
 </html>

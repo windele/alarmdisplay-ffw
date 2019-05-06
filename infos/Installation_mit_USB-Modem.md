@@ -1,119 +1,4 @@
-#Update April 2019: Aktuell wird die Software überarbeitet, um den BayernAtlas mit einzubinden und eine Version zu erstellen, die mit der FritzBox als Faxgerät zusammenarbeitet.
-
-# Allgemeines
-## Nutzen der Software
-Diese Software kann bei Feuerwehren dazu verwendet werden, die Informationen 
-des Alarmfax auf einem Bildschirm darzustellen. Insbesondere werden die 
-Informationen so aufbereitet, dass der Einsatzort und die Anfahrt dorthin auf 
-einer Karte visualisiert werden. 
-
-
-## Funktionsumfang
-- **Digitale Uhr**: Im Ruhezustand zeigt das Alarmdisplay in großen Lettern 
-  eine Uhr und das Datum an. 
-- **Hinweistexte**: Das Alarmdisplay kann als digitales Schwarzes Brett genutzt 
-  werden. Es können bis zu fünf Hinweistexte hinterlegt werden, die abwechselnd 
-  den Bildschirm füllen. Jeder Hinweistext kann mit einem Start- und Ende-Datum 
-  versehen werden, was eine automatische Anzeige ermöglicht.
-- **Einsatzvisualisierung und Einsatzkräfteinfo**: Im Alarmfall zeigt das 
-  Alarmdisplay die Einsatzdaten aus dem Alarmfax an. Zusätzlich wird der 
-  Einsatzort und die Anfahrt dorthin auf einer Karte visualisiert. Ein Versand 
-  der Daten per E-Mail an die Einsatzkräfte, der Versand einer SMS 
-  (kostenpflichtig über den Dienstleister [RETTalarm](http://www.rettalarm.de) 
-  (RETTalarm ist ein eingetragenes Warenzeichen der ide-tec KG) oder der 
-  Ausdruck einer Anfahrtsroutenbeschreibung sind ebenfalls Teil des Programms.
-- **Administrationsmenü**: Fast alle Parameter der Software können über ein 
-  Administrationsmenü eingestellt werden.
-
-
-## Historie
-Die Software wurde bei der [Freiwilligen Feuerwehr 
-Piflas](http://www.feuerwehr-piflas.de) im Jahr 2012 zum ersten Mal eingesetzt. 
-Seit Mitte 2012 läuft die Software ohne Komplikationen durch und wurde im Laufe 
-der Zeit um weitere Funktionen ergänzt.
-
-Viele der enthaltenen Funktionen sind deswegen speziell auf die Belange dieser 
-Feuerwehr bzw. deren Umgebung angepasst. Vielleicht ändert sich weiterhin im 
-Laufe der Zeit der Funktionsumfang im Rahmen der Weiterentwicklung.
-
-
-## Realisation & Systemvoraussetzungen
-Die Software wurde in PHP geschrieben; die Visualisierung der Informationen 
-erfolgt in Form einer Webseite. Bei der Webseitenanzeige muss im Browser 
-JavaScript aktiviert sein, sonst funktionieren Uhr, Hinweistexte und 
-Aktualisierung nicht.
-
-Für einzelne Funktionen (z.B. Druck des Anfahrtsplanes, etc.) wird auf weitere 
-externe Software zurückgegriffen. Für die optimale Funktion wird ein 
-Linux-System vorausgesetzt.
-
-- **Datenquelle**: Als Datenquelle verwenden wir das Alarmfax, welches von der 
-  Leitstelle bei Alarmierung an die Feuerwehr übermittelt wird. Auf unserem 
-  Server nimmt dies die Faxsoftware *HylaFax* über ein *analoges USB-Faxmodem* 
-  an und löst gleichzeitig die nächste Stufe, die Texterkennung aus. Als 
-  Texterkennungssoftware haben wir im laufenden System auf *Cuneiform* gesetzt, 
-  da dies untrainiert im Test die besten Erkennungsraten lieferte. Aktuell 
-  würde ich aber *Tesseract* empfehlen. Aus dem TIF-Faxdokument wird so eine 
-  TXT-Datei generiert.
-- **Verarbeitung**: Nach der Texterkennung wird das digitalisierte Fax an das 
-  PHP-Script `ocr/readfile.php` übergeben. Dieses Skript ist dafür 
-  verantwortlich, das Fax zu prüfen (Wurde uns wirklich von der Leitstelle ein 
-  Fax geschickt oder ist es Werbung?) und die Inhalte in eine *mySQL-Datenbank* 
-  zu schreiben. Da dieses Skript bei jedem Faxeingang aufgerufen wird, 
-  übernimmt es auch den Versand der Daten per E-Mail, die Auslösung einer 
-  RETTalarm-SMS und die Generierung der Ausdrucke. Die Ausdrucke werden in Form 
-  eines Screenshots der Webseite realisiert, dies übernimmt die Software 
-  [wkhtmlmtopdf](http://code.google.com/p/wkhtmltopdf/) bzw. deren Teil 
-  wkhtmltoimage. Um die Daten in Druckform zu bringen, werden die Screenshots 
-  mit *convert* aus dem *ImageMagick*-Paket verarbeitet.
-- **Ausgabe**: Die Skripte des Alarmdisplays überprüfen regelmässig durch eine 
-  *JavaScript*-Funktion die Datenbank. Wenn ein aktueller Einsatz festgestellt 
-  wird, so wechselt die Anzeige von der Uhr bzw. dem digitalen schwarzen Brett 
-  zur Einsatzanzeige. Alle Daten des Faxes werden dargestellt und der 
-  Einsatzort soweit möglich auf einer Karte mit Google Maps dargestellt. Um 
-  diese Visualisierung so darstellen zu können, wird ein installierter 
-  Webserver (z.B. *Apache* oder *lighttpd*) sowie eine Internetverbindung (für 
-  GoogleMaps) benötigt. Die Darstellung selbst erfolgt mit einem Browser (bei 
-  uns *Mozilla Firefox*), der im Kiosk-Modus (Vollbild -> F11) läuft.
-- **Hardware**: Die Software läuft erfolgreich im 24/7-Betrieb auf einem 
-  lüfterlosen Industrie-PC, der direkt an einen Bildschirm gekoppelt ist. Als 
-  Drucker wird ein von Linux unterstützter Netzwerkdrucker eingesetzt. Es 
-  sollte aber jeder einigermaßen leistungsfähige PC mit Linux funktionieren. 
-  (*RaspberryPi* funktioniert in der Theorie auch, leider ist die 
-  Prozessorperformance dem Einsatzzweck als Feuerwehrinformationsmittel nicht 
-  gewachsen. Wir experimentieren aktuell mit leistungsfähigeren 
-  ARM-Prozessoren.) Die Erfahrung zeigt, dass ein großer Bildschirm die 
-  Informationsaufnahme bei den Einatzkräften erhöht.
-
-
-## Grenzen
-- Die Software kann aktuell keine Einsatzorte auf der Autobahn visualisieren 
-  bzw. die Anfahrt dorthin berechnen. Für unseren Einsatzbereich wurden die 
-  verschiedenen Autobahnabschnitte der A92 im Skript `ocr/readfile.php` 
-  codiert, um eine optimiertere Anzeige zu erreichen.
-- Die Software kann nur dann eine genaue Anfahrt errechnen, wenn die Adresse 
-  einwandfrei von der Leitstelle übermittelt wurde und GoogleMaps diese 
-  auflösen kann.
-- Die Routenberechnung erfolgt für PKW; temporäre Straßensperrungen, 
-  Gewichtsbeschränkungen oder Durchfahrtshöhen sind nicht berücksichtigt. Eine 
-  gewisse Ortskenntnis der Einsatzfahrzeugfahrer wird also vorausgesetzt.
-- FMS-Status können nur dann dargestellt werden, wenn ein externes System die 
-  Status an die Datenbank übermittelt. In einer standalone-Standardinstallation 
-  geht dies nicht.
-
-
-## Danke
-Für das Projekt "Alarmdisplay" wurde auf weitere Software zurückgegriffen, bei 
-deren Autoren ich mich herzlich bedanken möchte.
-Verwendet wurden:
-- [PHPMailer](https://github.com/PHPMailer/PHPMailer) zum Versenden der E-Mails
-- [PHPMyEdit](http://www.phpmyedit.org/) im Administrationsmenü
-- [JQuery](http://www.jquery.com) im Administrationsmenü
-- [BluePrintCSS](http://www.blueprintcss.org) für die Ausrichtung 
-- [GoogleMaps](http://maps.google.de) für das Routing und die Kartenanzeige.
-
-
-# Installation
+# Installation mit USB-Faxmodem und Hylafax
 ## Grundsystem
 Für die komplette Funktion wird ein laufendes Linux-System mit grafischer 
 Oberfläche angenommen. Konfigurieren Sie das System so, dass ein Benutzer 
@@ -145,14 +30,15 @@ Merken Sie sich das bei der Installation gesetzte Datenbank-Master-Passwort!
 ### Weitere Tools
 Installieren Sie auch folgende Softwarepakete:
 
-`sudo apt-get install openssl build-essential libssl-dev libxrender-dev libqt4-dev`
-`sudo apt-get install qt4-dev-tools motion imagemagick cuneiform xdotool php5 curl`
+`sudo apt-get install openssl build-essential libssl-dev libxrender-dev libqt-dev`
+`sudo apt-get install qt-dev-tools motion imagemagick cuneiform xdotool php curl`
 
 
 ### Screenshot-Tool
 Für den korrekten Ausdruck ist ein Screenshot-Tool notwendig - ich empfehle 
 wkhtmltopdf. Diese Software können Sie einfach herunterladen: 
-[wkhtmltopdf](http://code.google.com/p/wkhtmltopdf/).
+[wkhtmltopdf](http://code.google.com/p/wkhtmltopdf/) bzw. aus ihrer Distribution
+installieren (z.B. `sudo apt-get install wkhtmltopdf`).
 Sie finden auf der angegebenen Seite auch Hilfestellung, wie Sie den 
 heruntergeladenen Quelltext kompilieren und die fertigen Programme installieren 
 können.
@@ -178,7 +64,7 @@ Display laufen sollte.
 
 
 ### Richten Sie sich einen Standarddrucker ein
-Konfiguriere Sie einen Drucker so, dass er über das `lp`-Kommando angesprochen 
+Konfigurieren Sie einen Drucker so, dass er über das `lp`-Kommando angesprochen 
 werden kann. Diese Aufgabe können Sie einfach über die grafische 
 Benutzeroberfläche Ihrer Distribution erledigen.
 
@@ -210,7 +96,9 @@ schneller einzulesen.
 ## Installieren der Alarmdisplay-Software
 ### Dateien kopieren
 Erstellen Sie im Wurzelverzeichnis des Webservers (meist `/var/www`) ein 
-Verzeichnis `alarmdisplay` und entpacken Sie darin das ZIP-Archiv der Software.
+Verzeichnis `alarmdisplay-ffw` und entpacken Sie darin das ZIP-Archiv der Software.
+Sollte das Wurzelverzeichnis nicht `/var/www` sein, müssen Sie alle Pfade innerhalb 
+der Programme manuell anpassen.
 
 
 ### Legen Sie eine Datenbank an
@@ -243,7 +131,7 @@ SHYLAFAX=/var/spool/hylafax
 mkdir -p $TMPFAX
 cuneiform --singlecolumn --fax -l ger -o $TMPFAX/latest-fax.txt $SHYLAFAX/$FILE
 # tesseract $SHYLAFAX/$FILE $TMPFAX/latest-fax.txt -l ils -psm 6
-cd /var/www/alarmdisplay/ocr
+cd /var/www/alarmdisplay-ffw/ocr
 php readfile.php $TMPFAX/latest-fax.txt $SHYLAFAX/$FILE
 rm -rf $TMPFAX
 ```
@@ -267,7 +155,7 @@ Absicherung der Datenbank mit Benutzernamen und Passwort!
 
 ### Anzeige konfigurieren 
 Rufen Sie mit einem Browser auf der grafischen Benutzeroberfläche die Webseite 
-`http://IP-Adresse des Servers/alarmdisplay/` auf. Sie sollten jetzt eigentlich 
+`http://IP-Adresse des Servers/alarmdisplay-ffw/` auf. Sie sollten jetzt eigentlich 
 die Uhr sehen.
 Konfigurieren Sie diese Seite als Startseite und stellen Ihr Linux-System so 
 ein, dass der Browser beim Systemstart immer gestartet wird.
@@ -313,7 +201,7 @@ grundsätzlich Faxe richtig annimmt.
   angegebenen Fahrzeuge ändern wollen, nehmen Sie die Änderung in der 
   `modules/mod_einsatz.php` vor.
 - **Reguläre Ausdrücke:** in der Datei `ocr/readfile.php` werden in den Zeilen 
-  69 bis 100 durch Reguläre Ausdrücke Informationen wie Mitteiler, Straße und 
+  durch Reguläre Ausdrücke Informationen wie Mitteiler, Straße und 
   Hausnummer gesammelt. Diese Ausdrucke müssen an das Alarmfax der Örtlichen 
   Rettungsleitstelle angepasst werden. Da die Informationen aus einem OCR 
   Vorgang stammen müssen mit Fehler gerechnet werden, dass zum Beispiel statt 
@@ -325,35 +213,9 @@ grundsätzlich Faxe richtig annimmt.
 Weitere Tipps und Tricks sowie die FAQ finden sie im [Repository-Wiki auf 
 GitHub](https://github.com/windele/alarmdisplay-ffw/wiki)
 
-
-# Support
-Gerne können Sie mich per Mail erreichen. Leider kann ich aber aus Zeitgründen 
-und der Fülle der Anfragen keinen umfangreichen kostenfreien Support leisten. 
-Stellen Sie Ihre Frage trotzdem, vielleicht gibt es eine schnelle und kostenlose 
-Lösung.
-
-
 # Undokumentierte Funktionen
 Die Anzeige der FMS-Status bzw. die Anbindung eines externen Systemes ist noch 
-nicht dokumentiert. Dies folgt.
-
-# Geplante Änderungen und Erweiterungen
-Es ist geplant, die Software so anzupassen, dass sie auch auf Mini-PC's mit 
-ARM-Prozessoren läuft. Hierzu ist auch die Anpassung an die Texterkennung 
-*Tesseract* geplant, da nur diese auf der ARM-Plattform läuft.
-
-# Referenzen
-Ich würde mich freuen, wenn Sie mir ein kurzes Feedback geben, wo die Software 
-überall im Einsatz ist. Dies können Sie mir per Mail mitteilen oder direkt in 
-das [Repository-Wiki auf 
-GitHub](https://github.com/windele/alarmdisplay-ffw/wiki/Einsatzorte-der-
-Software-und-Referenzen) schreiben.
+immer nicht dokumentiert. 
 
 
-# Haftungsausschluss und Datenschutz
-Ich übernehme keine Haftung für die Funktion der Software vor Ort.
-Da über diese Software sensible personenbezogene Daten verarbeitet werden, ist 
-der Datenschutz vor Ort insbesondere zu beachten. Vor allem sollte ein Augenmerk 
-auf die *Datensparsamkeit* gelegt werden. Damit verbunden ist die strenge 
-Entscheidung, wer welche Daten per E-Mail oder SMS weitergeleitet bekommt. Im 
-Zweifel ist der Programmcode entsprechend anzupassen.
+

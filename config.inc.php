@@ -2,9 +2,9 @@
 
 /*
 ALARMDISPLAY FEUERWEHR PIFLAS
-Copyright 2012-2014 Stefan Windele
+Copyright 2012-2019 Stefan Windele
 
-Version 1.0.0
+Version 2.0.0
 
 In diesem Script werden die Zugänge zur Datenbank konfiguriert.
 
@@ -29,6 +29,6 @@ Programm erhalten haben. Wenn nicht, siehe <http://www.gnu.org/licenses/>.
 
 define("DBHOST", "127.0.0.1");		// Der Server
 define("DBNAME", "alarmdisplay");	// Datenbankname
-define("DBUSER", "root");		// Datenbank-Benutzer - "root" für den Admin
-define("DBPASS", "admin");	// Datenbank-Passwort
+define("DBUSER", "benutzer");		// Datenbank-Benutzer - "root" für den Admin
+define("DBPASS", "meinpasswort");	// Datenbank-Passwort
 

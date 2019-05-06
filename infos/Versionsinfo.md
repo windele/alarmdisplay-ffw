@@ -5,6 +5,7 @@ Entwickelt Mai 2019
 -Koordinaten von der Leitstelle werden mit ausgelesen
 -Kartendarstellung im BayernAtlas
 -Anbindung an Divera, Prowl und Telegram mit eingebaut
+-PHPMyEdit und PHPMailer aktualisiert
 
 # Version 1.0
 Erste lauffähige Version, durch viele Impulse und Anregungen auch aus der Internet-Community entwickelt und veröffentlicht. Entwickelt ab 2012.

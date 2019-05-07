@@ -133,6 +133,8 @@ Die Installation auf einem Rechner mit eingenem Faxserver ist unter
 Möchten Sie dagegen das Fax von einer FritzBox entgegen nehmen lassen, ist der Abschnitt
 [Installation FritzBox](infos/Installation_mit_FritzBox.md) zu beachten.
 
+Erprobt ist auch das Zusammenspiel von FritzBox und RaspberryPi, siehe hierzu die Datei [Installation Raspberry Pi](infos/Installation_auf_Raspberry_Pi.md).
+
 Es ist geplant, zukünftig ein lauffähiges RaspberryPi-Image zur Verfügung zu stellen.
 
 

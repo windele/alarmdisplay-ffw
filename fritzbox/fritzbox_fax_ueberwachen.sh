@@ -12,7 +12,7 @@ echo "Beginne mit Ordnerüberwachung..." | logger -i
 
 
 watchnames=''
-[ -d /var/www/alarmdisplay-ffw/fritzbox/faxbox/ ] && watchnames="$watchnames /var/www/alarmdisplay-ffw/fritzbox/faxbox/"
+[ -d /var/www/html/alarmdisplay-ffw/fritzbox/faxbox/ ] && watchnames="$watchnames /var/www/html/alarmdisplay-ffw/fritzbox/faxbox/"
 
 inotifywait -mrq -e moved_to --format %w%f $watchnames | while read FILE
 do
@@ -30,7 +30,7 @@ do
 
 	echo "...Daten an Alarmdisplay übergeben" | logger -i
 	
-	cd /var/www/alarmdisplay/ocr
+	cd /var/www/html/alarmdisplay/ocr
 	php readfile.php $TMPFAX/latest-fax.txt $FILE
 
 	echo "...Alarmfax drucken." | logger -i

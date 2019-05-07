@@ -1,0 +1,7 @@
+#/home/pi/.config/lxsession/LXDE-pi/autostart
+
+@unclutter
+@xset s off
+@xset -dpms
+@xset s noblank
+@chromium-browser --incognito --kiosk https://itrig.de/kiosk 

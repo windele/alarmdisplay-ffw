@@ -4,4 +4,5 @@
 @xset s off
 @xset -dpms
 @xset s noblank
-@chromium-browser --incognito --kiosk https://itrig.de/kiosk 
+@chromium-browser --start-fullscreen --kiosk --incognito --noerrdialogs --disable-translate --no-first-run --fast --fast-start --disable-infobars http://localhost/alarmdisplay-ffw
+

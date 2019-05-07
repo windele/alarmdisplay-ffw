@@ -95,9 +95,9 @@ schneller einzulesen.
 
 ## Installieren der Alarmdisplay-Software
 ### Dateien kopieren
-Erstellen Sie im Wurzelverzeichnis des Webservers (meist `/var/www`) ein 
+Erstellen Sie im Wurzelverzeichnis des Webservers (meist `/var/www/html`) ein 
 Verzeichnis `alarmdisplay-ffw` und entpacken Sie darin das ZIP-Archiv der Software.
-Sollte das Wurzelverzeichnis nicht `/var/www` sein, müssen Sie alle Pfade innerhalb 
+Sollte das Wurzelverzeichnis nicht `/var/www/html` sein, müssen Sie alle Pfade innerhalb 
 der Programme manuell anpassen.
 
 

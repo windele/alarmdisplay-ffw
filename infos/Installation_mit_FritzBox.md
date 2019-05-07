@@ -1,1 +1,3 @@
-Installation mit einer FritzBox als Faxgerät: Bitte orientieren Sie sich an der Datei [Installation Raspberry Pi](infos/Installation_mit_Raspberry_Pi.md)
+Installation mit einer FritzBox als Faxgerät: 
+
+Die Dokumentation ist leider noch nicht vollständig. Orientieren Sie sich für das Ereste an der Datei [Installation Raspberry Pi](infos/Installation_auf_Raspberry_Pi.md) 

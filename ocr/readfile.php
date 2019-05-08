@@ -116,6 +116,11 @@ if (preg_match("/Absender[^I]*ILS.Landshut/i", $alarmfax)) {
         $hw = trim($treffer[1]);
 
     }
+	
+    // Priorität
+    if (preg_match("/rio.\\W+(.*)/i", $alarmfax, $treffer)) {
+        $prio= trim($treffer[1]);
+    }
     
     // Einsatzmittel
    

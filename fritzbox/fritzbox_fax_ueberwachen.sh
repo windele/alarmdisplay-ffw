@@ -8,6 +8,10 @@ FAXTIFF=/tmp/alarm/aktuellesfax.tif
 # program
 
 echo "Alarmdisplay startet." | logger -i
+
+# erst mal warten, damit die alten Faxe synchronisiert werden und keinen Alarm auslösen
+sleep 25
+
 echo "Beginne mit Ordnerüberwachung..." | logger -i
 
 

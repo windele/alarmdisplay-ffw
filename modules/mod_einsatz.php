@@ -48,7 +48,7 @@ if ($parameter['BLINKALARM'] == "true") {
 $dispoliste = json_decode($row['dispo']);
 // Dispoliste prüfen, welche unserer Autos alarmiert wurden und Lampe rot schalten, Text blinken lassen
 for ($i = 0; $i < count($dispoliste); $i++) {
-	switch (html_entity_decode ($dispoliste[$i])) {
+	switch (html_entity_decode($dispoliste[$i])) {
 		case "Musterstadt 62/1" :
 			$fahrzeuge["RW"] = $parameter['FARBEALARM'] . $resthtmltag;
 			break;

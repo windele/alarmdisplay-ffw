@@ -7,10 +7,7 @@
  Version 2.0.0
  
  Dieses Script liest die von der Texterkennung übergebene Textdatei ein,
- zerlegt die Struktur und speichert diese in die Datenbank.
- Als Texterkennung wurde die Software Cuneiform verwendet.
- Wenn eine andere Texterkennung eingesetzt wird, so ist das Programm
- entsprechend anzupassen.
+ findet die relevanten Wörter und speichert diese in die Datenbank.
 
  Dieses Programm ist Freie Software: Sie können es unter den Bedingungen
  der GNU General Public License, wie von der Free Software Foundation,
@@ -33,6 +30,11 @@ setlocale(LC_ALL, 'de_DE');
 // Konfigurationsdatei einbinden
 require "../config.inc.php";
 
+// Einstellungen für den Mailversand
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 // Reset der Variablen
 $alarmzeit = "";
 $zeile_zerlegt = array();
@@ -45,8 +47,8 @@ $objekt = "";
 $station = "";
 $einsatzgrund = "";
 $prio = 0;
-$rw = 0;
-$hw = 0;
+$rw = "";
+$hw = "";
 $bemerkung = "";
 $dispoliste = array();
 
@@ -60,11 +62,65 @@ if (isset($_GET['debug'])) {
 }
 
 
-//ungeliebte Abkürzungen definieren zwecks Ersetzen
-	   $loeschungen = array();
-	   $loeschungen[0] = '/FL\\s/i';
-	   $loeschungen[1] = '/LA\\W\\w\\s/i';
-	   $loeschungen[2] = '/\\d\\.\\d\\.*\\d*\\s/i';
+//bekannte Probleme der Texterkennung umgehen
+	
+//dazu den Musterabsatz kopieren und anpassen.
+	/*
+	$patterns=array();
+	$replacement='';
+	$patterns[0] = '/falsches Wort/i';
+	$patterns[1] = '/falsches Wort/i';
+	$patterns[2] = '/falsches Wort/i';
+	$replacement = 'richtiges Wort';
+        $alarmfax = preg_replace($patterns, $replacement, $alarmfax);
+	*/
+
+//ungeliebte Abkürzungen definieren die mit Leerzeichen ersetzt werden
+	   $patterns=array();
+	   $replacement='';
+	   $patterns[0] = '/FL\\s/i';
+	   $patterns[1] = '/LA\\W\\w\\s/i';
+	   $patterns[2] = '/\s\d\.\d(\.*|\s*)\d*\s/i';
+	   $patterns[3] = "/2\.1\.1/";
+           $patterns[4] = "/2\.1\.2/";
+	   $patterns[5] = "/2\.1/";
+	   $patterns[6] = "/LA\-S /";
+	   $patterns[7] = "/LA\/S /";
+	   $patterns[8] = "/LA\-L /";
+	   $patterns[9] = "/LA\/L /";
+	   $replacement = '';
+           $alarmfax = preg_replace($patterns, $replacement, $alarmfax);	
+
+	   $patterns=array();
+	   $patterns[0] = '/uttrag/i';
+	   $replacement = 'uftrag';
+           $alarmfax = preg_replace($patterns, $replacement, $alarmfax);	
+
+
+	// Ortsname sollte richtig erkannt werden
+	$patterns=array();
+	$patterns[0] = '/P(\s)?i(\s)?f(\s)?l(\s)?a(\s)?s/';
+	$patterns[1] = '/PifIas/';
+	$patterns[2] = '/Pfilas/';
+	$patterns[3] = '/PfiIas/';
+	$replacement = 'Piflas';
+	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);	
+
+	// Leerzeichen bei den 2.1.x Kennungen
+	$patterns = array();
+	$patterns[0] = '/(?<=[0-9])[,.] (?=[0-9])/';
+	$replacement = '.';
+	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
+	
+	// Brandmelderkennungen
+	$patterns = array();
+	$patterns[0] = '/[0-9]{8}\-01:/';
+	$replacement = "";
+	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
+
+
+
+
 
 // Erkennung des Alarmfax
 if (preg_match("/Absender[^I]*ILS.Landshut/i", $alarmfax)) {
@@ -83,9 +139,9 @@ if (preg_match("/Absender[^I]*ILS.Landshut/i", $alarmfax)) {
     }
 
     // Objekt
-    if (preg_match("/Objekt\\W*(.*)\nEPN/i", $alarmfax, $treffer)) 
+    if (preg_match("/Objekt\\W*(.*)\n*EPN/i", $alarmfax, $treffer)) 
 	{
-        $objekt = trim(preg_replace($loeschungen, ' ', $treffer[1]));
+        $objekt = trim($treffer[1]);
 	}
 
     // Einsatzgrund
@@ -105,12 +161,12 @@ if (preg_match("/Absender[^I]*ILS.Landshut/i", $alarmfax)) {
         $bemerkung = trim($treffer[1]);
     }
     // Koordinate Rechtswert
-    if (preg_match("/Rechtswert\\W+(.*)/i", $alarmfax, $treffer)) {
+    if (preg_match("/Rechtswert\\W+(.*)/", $alarmfax, $treffer)) {
         $rw = trim($treffer[1]);
     }
 
     // Koordinate Hochwert
-    if (preg_match("/Hochwert\\W+(.*)/i", $alarmfax, $treffer)) {
+    if (preg_match("/Hochwert\\W+(.*)/", $alarmfax, $treffer)) {
         $hw = trim($treffer[1]);
 
     }
@@ -126,7 +182,7 @@ if (preg_match("/Absender[^I]*ILS.Landshut/i", $alarmfax)) {
 
         for ($i = 0; $i < count($treffer[0]); $i++) 
 	{
-	   $dispoliste[] = trim(preg_replace($loeschungen, ' ', $treffer[1][$i]));
+	   $dispoliste[] =  htmlentities(trim($treffer[1][$i]));
         }
     }
 	
@@ -149,4 +205,40 @@ for ($i = 0; $i < count($dispoliste); $i++) {
     echo "Dispo " . $i . ": " . $dispoliste[$i] . "\n";
 }
 
+echo "Alarm: " . trim($einsatzgrund); 
+
+
+/*
+
+    // Druckfunktion Screenshot
+
+
+ 	putenv("DISPLAY=:0");
+        passthru("wkhtmltoimage --height 1280 --width 1920 --javascript-delay 11000 --quality 100 http://localhost/alarmdisplay-ffw /tmp/screenshot.jpg");
+       
+
+        $exemplare = 0;
+
+ 
+           $anfahrtskarte = "wkhtmltoimage --height 1280 --width 1920 --javascript-delay 11000 --quality 100 'http://localhost/alarmdisplay-ffw/modules/mod_einsatz_inc_route_zoom_panel.php' /tmp/anfahrt.jpg";
+
+			// Anfahrtskarte erstellen
+			putenv("DISPLAY=:0");
+			putenv("LANG=de_DE.UTF-8");
+			setlocale(LC_ALL, 'de_DE.UTF-8');
+			passthru($anfahrtskarte);
+
+			$befehl = "convert -border 40 -bordercolor white -page A4 -density 300x300 -resize 2480x3506 -append -duplicate " . $exemplare . " /tmp/screenshot.jpg /tmp/anfahrt.jpg /tmp/screenshot.pdf";
+		
+ 
+
+        // PDF erstellen
+        passthru($befehl);
+
+        // PDF drucken
+        passthru("lp -o media=A4 -o fit-to-page /tmp/screenshot.pdf");
+*/
+
 ?>
+
+

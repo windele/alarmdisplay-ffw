@@ -480,7 +480,7 @@ if ($einsatzgrund != "") {
     if ($parameter["DRUCKENFAX"] == "true") {
         // Fax drucken
         $exemplare = intval($parameter["DRUCKENFAXWIEOFT"]) - 1;
-        passthru("convert -duplicate " . $exemplare . " " . $_SERVER['argv'][2] . " /tmp/alarmfaxdruck.pdf");
+        passthru("convert -density 300 -duplicate " . $exemplare . " " . $_SERVER['argv'][2] . " /tmp/alarmfaxdruck.pdf");
         passthru("lp -o media=A4 -o fit-to-page /tmp/alarmfaxdruck.pdf");
     }
 

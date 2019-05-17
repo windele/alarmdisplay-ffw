@@ -79,7 +79,23 @@ Fügen Sie der Datei `/etc/rc.local` als Administrator vor der Zeile `exit 0` fo
 /var/www/html/alarmdisplay-ffw/fritzbox/fritzbox_fax_ueberwachen.sh&
 ````
 
+Achtung: in der `/var/www/html/alarmdisplay-ffw/fritzbox/fritzbox_fax_ueberwachen.sh` muss bei einem Einsatz mit einer neueren Tesseract-Version der Parameter `-psm 6` in `--psm 6` geändert werden. Es ist auch zu prüfen, welche der *.traineddata-Dateien auf dem Zielsystem die beste Erkennung bietet. Dazu in der Kommandozeile den tesseract-Befehl mit diversen Sprachen (`-l deu` oder `-l ils) durchführen und die Ergebnisse vergleichen.
+
+
 Zur Optimierung des stabilen Betriebes kann noch folgende Webseite besucht werden: www.datenreise.de/raspberry-pi-stabiler-24-7-dauerbetrieb
+
+Für wkhtmltopdf existiert derzeit ein Fehler, der durch Ändern der Zeile
+````
+<policy domain="coder" rights="none" pattern="PDF" />
+````
+in
+````
+<policy domain="coder" rights="read | write" pattern="PDF" />
+````
+in der Datei `/etc/ImageMagick-7/policy.xml`behoben werden kann.
+
+
+
 
 ### Richten Sie sich einen Standarddrucker ein
 Konfigurieren Sie einen Drucker so, dass er über das `lp`-Kommando angesprochen 

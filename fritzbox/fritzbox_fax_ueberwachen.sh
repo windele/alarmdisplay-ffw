@@ -30,7 +30,7 @@ do
 
 	echo "...Fertig. Erkennung starten" | logger -i
 	# cuneiform --singlecolumn --fax -l ger -o $TMPFAX/latest-fax.txt $FILE
-	tesseract -l deu --psm 6 $FAXTIFF $TMPFAX/latest-fax 
+	tesseract -l deu -psm 6 $FAXTIFF $TMPFAX/latest-fax 
 
 	echo "...Daten an Alarmdisplay übergeben" | logger -i
 	
@@ -38,7 +38,7 @@ do
 	php readfile.php $TMPFAX/latest-fax.txt $FAXTIFF
 
 	echo "...Alarmfax drucken." | logger -i
-	# lpr $FILE
+	# lp -o media=A4 -o fit-to-page $FILE
 
 
 	echo "...aufräumen. Ende." | logger -i

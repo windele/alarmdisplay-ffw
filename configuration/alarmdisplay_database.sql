@@ -170,7 +170,7 @@ CREATE TABLE `tbl_einsaetze` (
   `objekt` text COLLATE utf8_unicode_ci,
   `station` text COLLATE utf8_unicode_ci,
   `schlagw` text COLLATE utf8_unicode_ci NOT NULL,
-  `prio` int(2) DEFAULT NULL,
+  `prio` text COLLATE utf8_unicode_ci,
   `bemerkung` text COLLATE utf8_unicode_ci,
   `dispo` text COLLATE utf8_unicode_ci,
   `rw` text COLLATE utf8_unicode_ci NOT NULL COMMENT 'Rechtswert',

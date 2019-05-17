@@ -63,6 +63,7 @@ cp /var/www/html/alarmdisplay-ffw/configuration/.smbcredentials /home/pi
 cp /var/www/html/alarmdisplay-ffw/configuration/.xsessionrc /home/pi
 cp /var/www/html/alarmdisplay-ffw/configuration/autostart /home/pi/.config/lxsession/LXDE-pi/
 cp /var/www/html/alarmdisplay-ffw/configuration/ils.traineddata /usr/share/tesseract-ocr/tessdata/
+cp /var/www/html/alarmdisplay-ffw/configuration/deu.traineddata /usr/share/tesseract-ocr/tessdata/
 ````
 
 Passen Sie in der Datei `/home/pi/.smbcredentials` das Passwort der FritzBox an.
@@ -79,7 +80,7 @@ Fügen Sie der Datei `/etc/rc.local` als Administrator vor der Zeile `exit 0` fo
 /var/www/html/alarmdisplay-ffw/fritzbox/fritzbox_fax_ueberwachen.sh&
 ````
 
-Achtung: in der `/var/www/html/alarmdisplay-ffw/fritzbox/fritzbox_fax_ueberwachen.sh` muss bei einem Einsatz mit einer neueren Tesseract-Version der Parameter `-psm 6` in `--psm 6` geändert werden. Es ist auch zu prüfen, welche der *.traineddata-Dateien auf dem Zielsystem die beste Erkennung bietet. Dazu in der Kommandozeile den tesseract-Befehl mit diversen Sprachen (`-l deu` oder `-l ils) durchführen und die Ergebnisse vergleichen.
+Achtung: in der `/var/www/html/alarmdisplay-ffw/fritzbox/fritzbox_fax_ueberwachen.sh` muss bei einem Einsatz mit einer neueren Tesseract-Version der Parameter `-psm 6` in `--psm 6` geändert werden. Es ist auch zu prüfen, welche der *.traineddata-Dateien auf dem Zielsystem die beste Erkennung bietet. Dazu in der Kommandozeile den tesseract-Befehl mit diversen Sprachen (`-l deu` oder `-l ils`) durchführen und die Ergebnisse vergleichen.
 
 
 Zur Optimierung des stabilen Betriebes kann noch folgende Webseite besucht werden: www.datenreise.de/raspberry-pi-stabiler-24-7-dauerbetrieb

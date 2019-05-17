@@ -83,14 +83,17 @@ um und kopieren Sie die Datei in den Hylafax-Konfigurationsordner.
 
 ### Installieren Sie eine Texterkennungssoftware
 Im Pilotprojekt brachte die Software `cuneiform` die besten Ergebnisse - Sie 
-können aber auch `tesseract-ocr` verwenden.
-Installation von cuneiform: `sudo apt-get install cuneiform`
+können aber auch `tesseract-ocr` verwenden. Mit den im Repository enthaltenen 
+*traineddata-Dateien liefert Tesseract mittlerweile sehr gute Ergebnisse.
 
+Installation von cuneiform: `sudo apt-get install cuneiform`
 Installation von Tesseract: `sudo apt-get install tesseract-ocr tesseract-ocr-deu`
 Bei der Verwendung von Tesseract können Sie die enthaltene Trainingsdatei 
-`configuration/ils.traineddata` in den Ordner 
+`configuration/ils.traineddata` bzw. `configuration/deu.traineddata` in den Ordner 
 `/usr/share/tesseract-ocr/tessdata/` kopieren - dies hilft Ihnen, die ILS-Faxe 
-schneller einzulesen.
+schneller einzulesen. Es ist im Vorfeld zu ermitteln, welche Trainingsdatei die besten
+Ergebnise liefert - hierzu Tesseract auf der Kommandozeile mit den verschiednenen
+Parametern starten.
 
 
 ## Installieren der Alarmdisplay-Software
@@ -131,7 +134,7 @@ SHYLAFAX=/var/spool/hylafax
 mkdir -p $TMPFAX
 cuneiform --singlecolumn --fax -l ger -o $TMPFAX/latest-fax.txt $SHYLAFAX/$FILE
 # tesseract $SHYLAFAX/$FILE $TMPFAX/latest-fax.txt -l ils -psm 6
-cd /var/www/alarmdisplay-ffw/ocr
+cd /var/www/html/alarmdisplay-ffw/ocr
 php readfile.php $TMPFAX/latest-fax.txt $SHYLAFAX/$FILE
 rm -rf $TMPFAX
 ```

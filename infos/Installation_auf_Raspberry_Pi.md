@@ -68,7 +68,7 @@ cp /var/www/html/alarmdisplay-ffw/configuration/ils.traineddata /usr/share/tesse
 Passen Sie in der Datei `/home/pi/.smbcredentials` das Passwort der FritzBox an.
 
 Fügen Sie der Datei `/etc/fstab` als Administrator folgende Zeile hinzu:
-`//192.168.178.1/FRITZ.NAS/FRITZ/	/media/fritzbox	cifs	credentials=/home/pi/.smbcredentials,uid=1000,git=1000,vers=1.0	0	0`
+`//192.168.178.1/FRITZ.NAS/FRITZ/	/media/fritzbox	cifs	credentials=/home/pi/.smbcredentials,uid=1000,gid=1000,vers=1.0	0	0`
 
 Leeren Sie jetzt das Verzeichnis faxbox auf der Fritzbox - beim nächsten Systemstart wird jede neue Datei in das Alarmdisplay eingelesen.
 Starten Sie deswegen mit einem leeren Verzeichnis.

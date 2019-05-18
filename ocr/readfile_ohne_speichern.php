@@ -118,6 +118,11 @@ if (isset($_GET['debug'])) {
 	$replacement = "";
 	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
 
+	// Texterkennung .z = .:
+	$patterns = array();
+	$patterns[0] = '/\.z/';
+	$replacement = ".:";
+	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
 
 
 

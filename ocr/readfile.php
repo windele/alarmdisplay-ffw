@@ -345,7 +345,7 @@ if ($einsatzgrund != "") {
             $text .= "---------------------------------------------------\n";
 
             foreach($dispoliste as $d) {
-                    $text .= $d . "\n";
+                    $text .= html_entity_decode($d) . "\n";
             }
 	    $text .= "---------------------------------------------------\n";
             $text .= "KOORDINATEN:\n";
@@ -443,10 +443,9 @@ if ($einsatzgrund != "") {
 		$text .= "DISPONIERTE FAHRZEUGE:\n";
 		$text .= "----------------------------------\n";
 
-		for ($i = 0; $i < 50; $i++) {
-		if ($dispoliste[$i] != "")
-		$text .= $dispoliste[$i] . "\n";
-		}
+		foreach($dispoliste as $d) {
+                    $text .= html_entity_decode($d) . "\n";
+                }  
 		$text .= "----------------------------------\n";
 		$text .= "ERGÄNZUNGEN:\n";
 		$text .= "----------------------------------\n";

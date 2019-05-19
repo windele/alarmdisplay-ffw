@@ -30,7 +30,7 @@ Nach der Installation kann wiederum mit `sudo raspi-config` der Autologin in den
 Es wird wieder Software installiert:
 
 ```bash
-sudo apt-get install php-common php-cgi php php-curl mysql-server mysql-client php-mysql wkthmltopdf
+sudo apt-get install php-common php-cgi php php-curl mysql-server mysql-client php-mysql wkhtmltopdf
 sudo apt-get install lighttpd xdotool
 sudo apt-get install phpmyadmin watchdog inotify-tools
 ````
@@ -85,7 +85,7 @@ Achtung: in der `/var/www/html/alarmdisplay-ffw/fritzbox/fritzbox_fax_ueberwache
 
 Zur Optimierung des stabilen Betriebes kann noch folgende Webseite besucht werden: www.datenreise.de/raspberry-pi-stabiler-24-7-dauerbetrieb
 
-Für wkhtmltopdf existiert derzeit ein Fehler, der durch Ändern der Zeile
+Für den convert-Befehl existiert derzeit ein Fehler, der durch Ändern der Zeile
 ````
 <policy domain="coder" rights="none" pattern="PDF" />
 ````

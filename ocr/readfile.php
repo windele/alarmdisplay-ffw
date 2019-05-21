@@ -524,6 +524,9 @@ if ($einsatzgrund != "") {
 
         // PDF drucken
         passthru("lp -o media=A4 -o fit-to-page /tmp/screenshot.pdf");
+
+	// Rechte bereinigen
+	passthru("chmod 766 /tmp/*.pdf; chmod 766 /tmp/*.jpg");
     }
 
 }

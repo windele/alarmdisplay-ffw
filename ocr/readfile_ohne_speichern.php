@@ -79,16 +79,12 @@ if (isset($_GET['debug'])) {
 	   $patterns=array();
 	   $replacement='';
 	   $patterns[0] = '/FL\\s/i';
-	   $patterns[1] = '/LA\\W\\w\\s/i';
+	   $patterns[1] = '/LA\\W[L,S]\\s/u';
 	   $patterns[2] = '/\s\d\.\d(\.*|\s*)\d*\s/i';
 	   $patterns[3] = "/2\.1\.1/";
            $patterns[4] = "/2\.1\.2/";
 	   $patterns[5] = "/2\.1/";
-	   $patterns[6] = "/LA\-S /";
-	   $patterns[7] = "/LA\/S /";
-	   $patterns[8] = "/LA\-L /";
-	   $patterns[9] = "/LA\/L /";
-	   $replacement = '';
+	   $replacement = ' ';
            $alarmfax = preg_replace($patterns, $replacement, $alarmfax);	
 
 	   $patterns=array();
@@ -163,13 +159,13 @@ if (preg_match("/Absender[^I]*ILS.Landshut/i", $alarmfax)) {
 
 	switch (substr($treffer[0],0,1)) {
 		case "A" :
-			$einsatzgrund = "ABC: " . trim($treffer[1]) . " (" . substr($treffer[0],0,5) . ")";
+			$einsatzgrund = "ABC " . trim($treffer[1]) . " (" . substr($treffer[0],0,5) . ")";
 			break;
 		case "B" :
-			$einsatzgrund = "Brand: " . trim($treffer[1]) . " (" . substr($treffer[0],0,5) . ")";
+			$einsatzgrund = "Brand " . trim($treffer[1]) . " (" . substr($treffer[0],0,5) . ")";
 			break;
 		case "T" :
-			$einsatzgrund = "THL: " . trim($treffer[1]) . " (" . substr($treffer[0],0,5) . ")";
+			$einsatzgrund = "THL " . trim($treffer[1]) . " (" . substr($treffer[0],0,5) . ")";
 			break;
 	}
            

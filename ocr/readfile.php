@@ -161,7 +161,22 @@ if (preg_match("/Absender[^I]*ILS.Landshut/i", $alarmfax)) {
 	// Hashtags entfernen
 	$einsatzgrund = str_replace ("#", " ", $einsatzgrund);
 
+	// Kennung hinten anstellen
+	if (preg_match("/[A,B,T]\d\d\d\d(.*)/i", $einsatzgrund, $treffer)) {
 
+	switch (substr($treffer[0],0,1)) {
+		case "A" :
+			$einsatzgrund = "ABC: " . trim($treffer[1]) . " (" . substr($treffer[0],0,5) . ")";
+			break;
+		case "B" :
+			$einsatzgrund = "Brand: " . trim($treffer[1]) . " (" . substr($treffer[0],0,5) . ")";
+			break;
+		case "T" :
+			$einsatzgrund = "THL: " . trim($treffer[1]) . " (" . substr($treffer[0],0,5) . ")";
+			break;
+	}
+           
+        }
 	
     }
     // Bemerkung

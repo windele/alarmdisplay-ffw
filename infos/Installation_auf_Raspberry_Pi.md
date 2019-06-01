@@ -159,6 +159,10 @@ ein, dass der Browser beim Systemstart immer gestartet wird.
   Ausdrücke beachtet werden.
 
 
+## Testfax
+Unter `configuration/testfax.pdf` ist eine einfache Textdatei als PDF zu finden, die ein Testfax simulieren soll. Bevor Sie in die "heißen" Tests gehen, wird empfohlen, die Funktion sowie die korrekten Pfade und Dateiberechtigungen mit dieser Datei zu testen. Dazu kopieren Sie diese Datei in das Verzeichnis `/var/media/fritzbox/faxbox`. Anschließend sollte die automatische Erkennung anlaufen, im Verzeichnis `/tmp` werden im Unterordner `/tmp/alarm/` verschiedene Dateien angelegt sowie bei aktivierter Druckfunktion im Verzeichnis `/tmp` die Dateien anfahrt.jpg, screenshot.jpg und screenshot.pdf. Anschließend wird das Verzeichnis `/var/media/fritzbox/faxbox` automatisch geleert und das Testfax in den Ordner `/home/pi/faxarchiv` verschoben. Auf dem Display sollte nun der Testeinsatz sichtbar sein.
+
+
 ## Tipps und Tricks
 Weitere Tipps und Tricks sowie die FAQ finden sie im [Repository-Wiki auf 
 GitHub](https://github.com/windele/alarmdisplay-ffw/wiki)

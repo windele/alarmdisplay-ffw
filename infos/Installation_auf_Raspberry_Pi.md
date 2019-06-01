@@ -55,7 +55,12 @@ Sollte das Wurzelverzeichnis nicht `/var/www/html` sein, müssen Sie alle Pfade 
 der Programme manuell anpassen.
 
 
-Für die Anbindung an die FritzBox wird ein Verzeichnis angelegt: `mkdir /media/fritzbox`
+Für die Anbindung an die FritzBox werden folgende Verzeichnisse angelegt: 
+
+`mkdir /media/fritzbox`  --> hier wird das faxbox-Verzeichnis der Fritzbox gemountet
+`mkdir /home/pi/faxarchiv`  --> hier wird jedes Alarmfax nach dem Einlesen abgelegt
+
+Da bei den Tests mit aktuellen Fritzboxen beim Eintreffen eines Alarmfax sporadisch auch das vom vorherigen Einsatz nochmals eingelesen wurde, löscht das Überwachungsskript nach dem Einlesen das Fax von der FritzBox und archiviert es im Homeverzeichnis. 
 
 Folgende Dateien müssen kopiert werden:
 ````bash
@@ -76,8 +81,8 @@ Starten Sie deswegen mit einem leeren Verzeichnis.
 
 Fügen Sie der Datei `/etc/rc.local` als Administrator vor der Zeile `exit 0` folgende Zeilen hinzu:
 ````
-/var/www/html/alarmdisplay-ffw/fritzbox/fritzbox_fax_synchron.sh&
-/var/www/html/alarmdisplay-ffw/fritzbox/fritzbox_fax_ueberwachen.sh&
+sudo -u pi /var/www/html/alarmdisplay-ffw/fritzbox/fritzbox_fax_synchron.sh&
+sudo -u pi /var/www/html/alarmdisplay-ffw/fritzbox/fritzbox_fax_ueberwachen.sh&
 ````
 
 Achtung: in der `/var/www/html/alarmdisplay-ffw/fritzbox/fritzbox_fax_ueberwachen.sh` muss bei einem Einsatz mit einer neueren Tesseract-Version der Parameter `-psm 6` in `--psm 6` geändert werden. Es ist auch zu prüfen, welche der *.traineddata-Dateien auf dem Zielsystem die beste Erkennung bietet. Dazu in der Kommandozeile den tesseract-Befehl mit diversen Sprachen (`-l deu` oder `-l ils`) durchführen und die Ergebnisse vergleichen.
@@ -121,7 +126,7 @@ Absicherung der Datenbank mit Benutzernamen und Passwort!
 
 ### Anzeige konfigurieren 
 Rufen Sie mit einem Browser auf der grafischen Benutzeroberfläche die Webseite 
-`http://IP-Adresse des Servers/alarmdisplay-ffw/` auf. Sie sollten jetzt eigentlich 
+`http://IP-Adresse des Servers/alarmdisplay-ffw/` bzw. direkt auf der Maschine `http://localhost/alarmdisplay-ffw/` auf. Sie sollten jetzt eigentlich 
 die Uhr sehen.
 Konfigurieren Sie diese Seite als Startseite und stellen Ihr Linux-System so 
 ein, dass der Browser beim Systemstart immer gestartet wird.

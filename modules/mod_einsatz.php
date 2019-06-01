@@ -142,9 +142,9 @@ if ($parameter['EINSATZHINWEIS'] != "") {
 	echo $row[9] . " &bull; ";
 ?>Mitteiler:
 <?php  // Mitteiler
-	echo $row[2];
+	echo $row[2]. " &bull; ";
 ?>
-&bull; Alarmzeit: 
+Alarmzeit: 
 <?php  // Alarmzeit
 	echo date("H:i", $row['time']);
 ?>

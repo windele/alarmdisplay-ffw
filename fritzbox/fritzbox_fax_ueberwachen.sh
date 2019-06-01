@@ -10,7 +10,7 @@ FAXTIFF=/tmp/alarm/aktuellesfax.tif
 echo "Alarmdisplay startet." | logger -i
 
 # erst mal warten, damit die alten Faxe synchronisiert werden und keinen Alarm auslösen
-sleep 25
+sleep 15
 
 echo "Beginne mit Ordnerüberwachung..." | logger -i
 
@@ -25,6 +25,9 @@ do
 	echo "...temporäres Verzeichnis erstellen" | logger -i
 	mkdir -p $TMPFAX
 
+	echo "...Alarmfax drucken." | logger -i
+	# lp -o media=A4 -o fit-to-page $FILE
+
 	echo "...Datei konvertieren" | logger -i
 	convert -density 400 -depth 8 -monochrome -append $FILE $FAXTIFF
 
@@ -37,12 +40,12 @@ do
 	cd /var/www/html/alarmdisplay-ffw/ocr
 	php readfile.php $TMPFAX/latest-fax.txt $FAXTIFF
 
-	echo "...Alarmfax drucken." | logger -i
-	# lp -o media=A4 -o fit-to-page $FILE
-
-
 	echo "...aufräumen. Ende." | logger -i
 	# rm -rf $TMPFAX
+	cp $FILE /home/pi/faxarchiv/	
+	rm -rf /media/fritzbox/faxbox/*.pdf
+        
+	
 
 
 done

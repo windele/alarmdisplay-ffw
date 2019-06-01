@@ -506,15 +506,15 @@ if ($einsatzgrund != "") {
     // Druckfunktion Screenshot
     if ($parameter["DRUCKENSCREEN"] == "true") {
 
- 	putenv("DISPLAY=:0");
-        passthru("wkhtmltoimage --height 1280 --width 1920 --javascript-delay 11000 --quality 100 http://localhost/alarmdisplay-ffw /tmp/screenshot.jpg");
+ 	     putenv("DISPLAY=:0");
+        passthru("wkhtmltoimage --height 1280 --width 1920 --javascript-delay 14000 --quality 100 http://localhost/alarmdisplay-ffw /tmp/screenshot.jpg");
        
 
         $exemplare = intval($parameter["DRUCKENSCREENWIEOFT"]) - 1;
 
  
             if ($parameter["DRUCKENANFAHRT"] == "true") {
-			$anfahrtskarte = "wkhtmltoimage --height 1280 --width 1920 --javascript-delay 11000 --quality 100 'http://localhost/alarmdisplay-ffw/modules/mod_einsatz_inc_route_zoom_panel.php' /tmp/anfahrt.jpg";
+			$anfahrtskarte = "wkhtmltoimage --height 1280 --width 1920 --javascript-delay 14000 --quality 100 http://localhost/alarmdisplay-ffw/modules/mod_einsatz_inc_route_zoom_panel.php /tmp/anfahrt.jpg";
 
 			// Anfahrtskarte erstellen
 			putenv("DISPLAY=:0");

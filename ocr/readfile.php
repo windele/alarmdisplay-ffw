@@ -119,6 +119,15 @@ if (isset($_GET['debug'])) {
 	$patterns[0] = '/\.z/';
 	$replacement = ".:";
 	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
+	
+	// Koordinaten 7=? 
+	$patterns = array();
+	$patterns[0] = '/(?<=[\d\.\?])\?(?=[\d\.])/';
+	$patterns[1] = '/(?<=\d.\d)\?/';
+	$replacement = "7";
+	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
+	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
+
 
 
 

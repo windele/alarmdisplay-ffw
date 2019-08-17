@@ -135,7 +135,15 @@ Möchten Sie dagegen das Fax von einer FritzBox entgegen nehmen lassen, ist der 
 
 Erprobt ist auch das Zusammenspiel von FritzBox und RaspberryPi, siehe hierzu die Datei [Installation Raspberry Pi](infos/Installation_auf_Raspberry_Pi.md).
 
-Es ist geplant, zukünftig ein lauffähiges RaspberryPi-Image zur Verfügung zu stellen.
+Ein fertiges Image für den RaspberryPi kann unter https://www.magentacloud.de/share/pgho4mm61x heruntergeladen werden.
+(Hinweise zum Image: 
+-mit Drücken von ALT+F4 kommt man aus dem automatisch startenden
+Vollbildschirm raus und kann konfigurieren
+-das Passwort für die FritzBox muss unter /home/pi/.smbcredentials
+eingetragen werden
+-alle anderen Passwörter sind Standard - für phpMyAdmin gilt: User root,
+Passwort admin)
+
 
 
 ## Tipps und Tricks

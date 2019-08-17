@@ -18,7 +18,7 @@ echo "Beginne mit Ordnerüberwachung..." | logger -i
 watchnames=''
 [ -d /var/www/html/alarmdisplay-ffw/fritzbox/faxbox/ ] && watchnames="$watchnames /var/www/html/alarmdisplay-ffw/fritzbox/faxbox/"
 
-inotifywait -mrq -e moved_to --format %w%f $watchnames | while read FILE
+inotifywait -mrq -e create --format %w%f $watchnames | while read FILE
 do
     echo "Neue Faxdatei $FILE eingetroffen. Wir legen los..." | logger -i
 

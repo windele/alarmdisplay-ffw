@@ -120,6 +120,12 @@ if (isset($_GET['debug'])) {
 	$replacement = ".:";
 	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
 	
+	// Texterkennung 1ein = lein
+	$patterns = array();
+	$patterns[0] = '/1ei/';
+	$replacement = "lei";
+	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
+	
 	// Koordinaten 7=? 
 	$patterns = array();
 	$patterns[0] = '/(?<=[\d\.\?])\?(?=[\d\.])/';

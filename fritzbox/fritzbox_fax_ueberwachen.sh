@@ -41,9 +41,10 @@ do
 	php readfile.php $TMPFAX/latest-fax.txt $FAXTIFF
 
 	echo "...aufräumen. Ende." | logger -i
-	# rm -rf $TMPFAX
-	cp $FILE /home/pi/faxarchiv/	
 	rm -rf /media/fritzbox/faxbox/*.pdf
+	rm -rf $TMPFAX
+	mv $FILE /home/pi/faxarchiv/	
+	
         
 	
 

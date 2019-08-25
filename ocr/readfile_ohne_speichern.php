@@ -119,7 +119,28 @@ if (isset($_GET['debug'])) {
 	$patterns[0] = '/\.z/';
 	$replacement = ".:";
 	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
+	
+	// Texterkennung 1ein = lein
+	$patterns = array();
+	$patterns[0] = '/(?<=[a-zA-Z])1(?=[a-z])/';
+	$replacement = "l";
+	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
 
+	// Texterkennung 11 = ll
+	$patterns = array();
+	$patterns[0] = '/(?<=[a-zA-Z])11(?=[a-z])/';
+	$replacement = "ll";
+	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
+	
+	// Koordinaten 7=? 
+	$patterns = array();
+	$patterns[0] = '/(?<=[\d\.\?])\?(?=[\d\.])/';
+	$patterns[1] = '/(?<=\d.\d)\?/';
+	$patterns[2] = '/(?<=[\d\.\?])T(?=[\d\.])/';
+	$patterns[3] = '/(?<=\d.\d)T/';
+	$replacement = "7";
+	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
+	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
 
 
 

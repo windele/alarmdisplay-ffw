@@ -29,7 +29,8 @@ do
 	# lp -o media=A4 -o fit-to-page $FILE
 
 	echo "...Datei konvertieren" | logger -i
-	convert -density 400 -depth 8 -monochrome -append $FILE $FAXTIFF
+	# convert -density 400 -depth 8 -monochrome -append $FILE $FAXTIFF
+	gs -o $FAXTIFF -sDEVICE=tiffg4 $FILE
 
 	echo "...Fertig. Erkennung starten" | logger -i
 	# cuneiform --singlecolumn --fax -l ger -o $TMPFAX/latest-fax.txt $FILE

@@ -198,12 +198,12 @@ if (preg_match("/Absender[^I]*ILS.Landshut/i", $alarmfax)) {
         $bemerkung = trim($treffer[1]);
     }
     // Koordinate Rechtswert
-    if (preg_match("/Rechtswert\\W+(.*)/", $alarmfax, $treffer)) {
+    if (preg_match("/Re[c,o]htswert\\W+(.*)/", $alarmfax, $treffer)) {
         $rw = trim($treffer[1]);
     }
 
     // Koordinate Hochwert
-    if (preg_match("/Hochwert\\W+(.*)/", $alarmfax, $treffer)) {
+    if (preg_match("/Ho[c,o]hwert\\W+(.*)/", $alarmfax, $treffer)) {
         $hw = trim($treffer[1]);
 
     }

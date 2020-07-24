@@ -21,7 +21,7 @@ watchnames=''
 inotifywait -mrq -e create --format %w%f $watchnames | while read FILE
 do
     echo "Neue Faxdatei $FILE eingetroffen. Wir legen los..." | logger -i
-
+	sleep 1 
 	echo "...temporäres Verzeichnis erstellen" | logger -i
 	mkdir -p $TMPFAX
 

@@ -132,7 +132,7 @@ if (isset($_GET['debug'])) {
 	$replacement = "ll";
 	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
 	
-	// Texterkennung /1 = /l
+	// Texterkennung 11 = ll
 	$patterns = array();
 	$patterns[0] = ':/l:';
 	$replacement = "/1";

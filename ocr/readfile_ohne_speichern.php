@@ -150,8 +150,8 @@ if (isset($_GET['debug'])) {
 	
 	// Texterkennung ßaum
 	$patterns = array();
-	$patterns[0] = '/ßaum/';
-	$replacement = "Baum";
+	$patterns[0] = '/(?<=\s)(ß)(?=[a-z]{2,})/';
+	$replacement = "B";
 	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
 	
 	

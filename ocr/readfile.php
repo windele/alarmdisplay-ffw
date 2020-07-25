@@ -148,10 +148,10 @@ if (isset($_GET['debug'])) {
 	$replacement = "eCall";
 	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
 	
-	// Texterkennung ßaum
+	// Texterkennung ßaum - scharfes s am Wortanfang
 	$patterns = array();
-	$patterns[0] = '/ßaum/';
-	$replacement = "Baum";
+	$patterns[0] = '/(?<=\s)(ß)(?=[a-z]{2,})/';
+	$replacement = "B";
 	$alarmfax = preg_replace($patterns, $replacement, $alarmfax);
 	
 	// Koordinaten 7=? 

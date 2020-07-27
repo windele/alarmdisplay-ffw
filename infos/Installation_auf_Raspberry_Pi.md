@@ -83,6 +83,9 @@ Starten Sie deswegen mit einem leeren Verzeichnis.
 
 Fügen Sie der Datei `/etc/rc.local` als Administrator vor der Zeile `exit 0` folgende Zeilen hinzu:
 ````
+sleep 10
+mount -a
+sleep 2
 sudo -u pi /var/www/html/alarmdisplay-ffw/fritzbox/fritzbox_fax_synchron.sh&
 sudo -u pi /var/www/html/alarmdisplay-ffw/fritzbox/fritzbox_fax_ueberwachen.sh&
 ````

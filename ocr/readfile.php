@@ -91,6 +91,29 @@ if (isset($_GET['debug'])) {
 	   $patterns[0] = '/uttrag/i';
 	   $replacement = 'uftrag';
            $alarmfax = preg_replace($patterns, $replacement, $alarmfax);	
+           
+           
+    // Spezialfall
+        $patterns = array();
+        $patterns[0] = '/Sch1aqw/';
+        $patterns[1] = '/Sch1agw/';
+        $patterns[2] = '/Schlaqw/';
+        $replacement = "Schlagw";
+        $alarmfax = preg_replace($patterns, $replacement, $alarmfax);
+
+        // Koordinaten l=1
+        $patterns = array();
+        $patterns[0] = '/(?<=[0-9,.])ll(?=[0-9,.])*/';
+        $replacement = '11';
+        $alarmfax = preg_replace($patterns, $replacement, $alarmfax);
+
+
+        // Koordinaten l=1
+        $patterns = array();
+        $patterns[0] = '/(?<=[0-9,.])l(?=[0-9,.])*/';
+        $replacement = '1';
+        $alarmfax = preg_replace($patterns, $replacement, $alarmfax);
+
 
 
 	// Ortsname sollte richtig erkannt werden

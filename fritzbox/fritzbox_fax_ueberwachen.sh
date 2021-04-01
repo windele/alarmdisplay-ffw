@@ -30,7 +30,7 @@ do
 
 	echo "...Datei konvertieren" | logger -i
 	# convert -density 400 -depth 8 -monochrome -append $FILE $FAXTIFF
-	gs -o $FAXTIFF -sDEVICE=tiffg4 $FILE
+	gs -sDEVICE=tiffg4 -r300 -o $FAXTIFF  $FILE
 
 	echo "...Fertig. Erkennung starten" | logger -i
 	# cuneiform --singlecolumn --fax -l ger -o $TMPFAX/latest-fax.txt $FILE

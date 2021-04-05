@@ -104,13 +104,16 @@ if (isset($_GET['debug'])) {
         // Koordinaten l=1
         $patterns = array();
         $patterns[0] = '/(?<=[0-9,.])ll(?=[0-9,.])*/';
+        $patterns[1] = '/(?<=[0-9,.])II(?=[0-9,.])*/';
+        $patterns[2] = '/(?<=[0-9,.])lI(?=[0-9,.])*/';
+        $patterns[3] = '/(?<=[0-9,.])Il(?=[0-9,.])*/';
         $replacement = '11';
         $alarmfax = preg_replace($patterns, $replacement, $alarmfax);
 
 
         // Koordinaten l=1
         $patterns = array();
-        $patterns[0] = '/(?<=[0-9,.])l(?=[0-9,.])*/';
+        $patterns[0] = '/(?<=[0-9,.])[I,l](?=[0-9,.])*/';
         $replacement = '1';
         $alarmfax = preg_replace($patterns, $replacement, $alarmfax);
 
